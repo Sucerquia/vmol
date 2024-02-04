@@ -12,7 +12,7 @@ arrows or text.
 - [Vpython](https://vpython.org/presentation2018/install.html)
 
 # Tutorials
-- Tutorial about the basic functions can be found in [this file](https://github.com/Sucerquia/vmol/~/bolb/main/examples/basic_visualization.ipynb)
+- Tutorial about the basic functions can be found in [this file](https://github.com/Sucerquia/vmol/blob/main/examples/basic_visualization.ipynb)
 
 # Ideas to implement
 - Use the same technique that angles to create surfaces. One possible use is
