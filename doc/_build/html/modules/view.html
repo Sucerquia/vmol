@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>view &mdash; vmol 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="transformer" href="tools/transformer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            vmol
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tools/dofs.html">dofs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/transformer.html">transformer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">view</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vmol.view.VMolecule"><code class="docutils literal notranslate"><span class="pre">VMolecule</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.add_angle"><code class="docutils literal notranslate"><span class="pre">VMolecule.add_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.add_atoms"><code class="docutils literal notranslate"><span class="pre">VMolecule.add_atoms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.add_bond"><code class="docutils literal notranslate"><span class="pre">VMolecule.add_bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.add_bonds"><code class="docutils literal notranslate"><span class="pre">VMolecule.add_bonds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.add_dihedral"><code class="docutils literal notranslate"><span class="pre">VMolecule.add_dihedral()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.add_dof"><code class="docutils literal notranslate"><span class="pre">VMolecule.add_dof()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.download_image"><code class="docutils literal notranslate"><span class="pre">VMolecule.download_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_all_angles"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_all_angles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_all_bonds"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_all_bonds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_all_dihedrals"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_all_dihedrals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_angle"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_atom"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_atom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_bond"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_bonds"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_bonds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.hide_dihedral"><code class="docutils literal notranslate"><span class="pre">VMolecule.hide_dihedral()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.setting_canvas"><code class="docutils literal notranslate"><span class="pre">VMolecule.setting_canvas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.show_atom"><code class="docutils literal notranslate"><span class="pre">VMolecule.show_atom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.show_axis"><code class="docutils literal notranslate"><span class="pre">VMolecule.show_axis()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.update_atom"><code class="docutils literal notranslate"><span class="pre">VMolecule.update_atom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.view.VMolecule.update_obj"><code class="docutils literal notranslate"><span class="pre">VMolecule.update_obj()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">vmol</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Modules</a></li>
+      <li class="breadcrumb-item active">view</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/view.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="view">
+<span id="id1"></span><h1>view<a class="headerlink" href="#view" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="vmol.view.VMolecule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vmol.view.</span></span><span class="sig-name descname"><span class="pre">VMolecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_scheme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[1.,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">[0.851,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">[0.8,</span> <span class="pre">0.502,</span> <span class="pre">1.],</span> <span class="pre">[0.761,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[1.,</span> <span class="pre">0.71,</span> <span class="pre">0.71],</span> <span class="pre">[0.565,</span> <span class="pre">0.565,</span> <span class="pre">0.565],</span> <span class="pre">[0.188,</span> <span class="pre">0.314,</span> <span class="pre">0.973],</span> <span class="pre">[1.,</span> <span class="pre">0.051,</span> <span class="pre">0.051],</span> <span class="pre">[0.565,</span> <span class="pre">0.878,</span> <span class="pre">0.314],</span> <span class="pre">[0.702,</span> <span class="pre">0.89,</span> <span class="pre">0.961],</span> <span class="pre">[0.671,</span> <span class="pre">0.361,</span> <span class="pre">0.949],</span> <span class="pre">[0.541,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.749,</span> <span class="pre">0.651,</span> <span class="pre">0.651],</span> <span class="pre">[0.941,</span> <span class="pre">0.784,</span> <span class="pre">0.627],</span> <span class="pre">[1.,</span> <span class="pre">0.502,</span> <span class="pre">0.],</span> <span class="pre">[1.,</span> <span class="pre">1.,</span> <span class="pre">0.188],</span> <span class="pre">[0.122,</span> <span class="pre">0.941,</span> <span class="pre">0.122],</span> <span class="pre">[0.502,</span> <span class="pre">0.82,</span> <span class="pre">0.89],</span> <span class="pre">[0.561,</span> <span class="pre">0.251,</span> <span class="pre">0.831],</span> <span class="pre">[0.239,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.902,</span> <span class="pre">0.902,</span> <span class="pre">0.902],</span> <span class="pre">[0.749,</span> <span class="pre">0.761,</span> <span class="pre">0.78],</span> <span class="pre">[0.651,</span> <span class="pre">0.651,</span> <span class="pre">0.671],</span> <span class="pre">[0.541,</span> <span class="pre">0.6,</span> <span class="pre">0.78],</span> <span class="pre">[0.612,</span> <span class="pre">0.478,</span> <span class="pre">0.78],</span> <span class="pre">[0.878,</span> <span class="pre">0.4,</span> <span class="pre">0.2],</span> <span class="pre">[0.941,</span> <span class="pre">0.565,</span> <span class="pre">0.627],</span> <span class="pre">[0.314,</span> <span class="pre">0.816,</span> <span class="pre">0.314],</span> <span class="pre">[0.784,</span> <span class="pre">0.502,</span> <span class="pre">0.2],</span> <span class="pre">[0.49,</span> <span class="pre">0.502,</span> <span class="pre">0.69],</span> <span class="pre">[0.761,</span> <span class="pre">0.561,</span> <span class="pre">0.561],</span> <span class="pre">[0.4,</span> <span class="pre">0.561,</span> <span class="pre">0.561],</span> <span class="pre">[0.741,</span> <span class="pre">0.502,</span> <span class="pre">0.89],</span> <span class="pre">[1.,</span> <span class="pre">0.631,</span> <span class="pre">0.],</span> <span class="pre">[0.651,</span> <span class="pre">0.161,</span> <span class="pre">0.161],</span> <span class="pre">[0.361,</span> <span class="pre">0.722,</span> <span class="pre">0.82],</span> <span class="pre">[0.439,</span> <span class="pre">0.18,</span> <span class="pre">0.69],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.58,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">[0.58,</span> <span class="pre">0.878,</span> <span class="pre">0.878],</span> <span class="pre">[0.451,</span> <span class="pre">0.761,</span> <span class="pre">0.788],</span> <span class="pre">[0.329,</span> <span class="pre">0.71,</span> <span class="pre">0.71],</span> <span class="pre">[0.231,</span> <span class="pre">0.62,</span> <span class="pre">0.62],</span> <span class="pre">[0.141,</span> <span class="pre">0.561,</span> <span class="pre">0.561],</span> <span class="pre">[0.039,</span> <span class="pre">0.49,</span> <span class="pre">0.549],</span> <span class="pre">[0.,</span> <span class="pre">0.412,</span> <span class="pre">0.522],</span> <span class="pre">[0.753,</span> <span class="pre">0.753,</span> <span class="pre">0.753],</span> <span class="pre">[1.,</span> <span class="pre">0.851,</span> <span class="pre">0.561],</span> <span class="pre">[0.651,</span> <span class="pre">0.459,</span> <span class="pre">0.451],</span> <span class="pre">[0.4,</span> <span class="pre">0.502,</span> <span class="pre">0.502],</span> <span class="pre">[0.62,</span> <span class="pre">0.388,</span> <span class="pre">0.71],</span> <span class="pre">[0.831,</span> <span class="pre">0.478,</span> <span class="pre">0.],</span> <span class="pre">[0.58,</span> <span class="pre">0.,</span> <span class="pre">0.58],</span> <span class="pre">[0.259,</span> <span class="pre">0.62,</span> <span class="pre">0.69],</span> <span class="pre">[0.341,</span> <span class="pre">0.09,</span> <span class="pre">0.561],</span> <span class="pre">[0.,</span> <span class="pre">0.788,</span> <span class="pre">0.],</span> <span class="pre">[0.439,</span> <span class="pre">0.831,</span> <span class="pre">1.],</span> <span class="pre">[1.,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.851,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.78,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.639,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.561,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.38,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.271,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.188,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.122,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.612],</span> <span class="pre">[0.,</span> <span class="pre">0.902,</span> <span class="pre">0.459],</span> <span class="pre">[0.,</span> <span class="pre">0.831,</span> <span class="pre">0.322],</span> <span class="pre">[0.,</span> <span class="pre">0.749,</span> <span class="pre">0.22],</span> <span class="pre">[0.,</span> <span class="pre">0.671,</span> <span class="pre">0.141],</span> <span class="pre">[0.302,</span> <span class="pre">0.761,</span> <span class="pre">1.],</span> <span class="pre">[0.302,</span> <span class="pre">0.651,</span> <span class="pre">1.],</span> <span class="pre">[0.129,</span> <span class="pre">0.58,</span> <span class="pre">0.839],</span> <span class="pre">[0.149,</span> <span class="pre">0.49,</span> <span class="pre">0.671],</span> <span class="pre">[0.149,</span> <span class="pre">0.4,</span> <span class="pre">0.588],</span> <span class="pre">[0.09,</span> <span class="pre">0.329,</span> <span class="pre">0.529],</span> <span class="pre">[0.816,</span> <span class="pre">0.816,</span> <span class="pre">0.878],</span> <span class="pre">[1.,</span> <span class="pre">0.82,</span> <span class="pre">0.137],</span> <span class="pre">[0.722,</span> <span class="pre">0.722,</span> <span class="pre">0.816],</span> <span class="pre">[0.651,</span> <span class="pre">0.329,</span> <span class="pre">0.302],</span> <span class="pre">[0.341,</span> <span class="pre">0.349,</span> <span class="pre">0.38],</span> <span class="pre">[0.62,</span> <span class="pre">0.31,</span> <span class="pre">0.71],</span> <span class="pre">[0.671,</span> <span class="pre">0.361,</span> <span class="pre">0.],</span> <span class="pre">[0.459,</span> <span class="pre">0.31,</span> <span class="pre">0.271],</span> <span class="pre">[0.259,</span> <span class="pre">0.51,</span> <span class="pre">0.588],</span> <span class="pre">[0.259,</span> <span class="pre">0.,</span> <span class="pre">0.4],</span> <span class="pre">[0.,</span> <span class="pre">0.49,</span> <span class="pre">0.],</span> <span class="pre">[0.439,</span> <span class="pre">0.671,</span> <span class="pre">0.98],</span> <span class="pre">[0.,</span> <span class="pre">0.729,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.631,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.561,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.502,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.42,</span> <span class="pre">1.],</span> <span class="pre">[0.329,</span> <span class="pre">0.361,</span> <span class="pre">0.949],</span> <span class="pre">[0.471,</span> <span class="pre">0.361,</span> <span class="pre">0.89],</span> <span class="pre">[0.541,</span> <span class="pre">0.31,</span> <span class="pre">0.89],</span> <span class="pre">[0.631,</span> <span class="pre">0.212,</span> <span class="pre">0.831],</span> <span class="pre">[0.702,</span> <span class="pre">0.122,</span> <span class="pre">0.831],</span> <span class="pre">[0.702,</span> <span class="pre">0.122,</span> <span class="pre">0.729],</span> <span class="pre">[0.702,</span> <span class="pre">0.051,</span> <span class="pre">0.651],</span> <span class="pre">[0.741,</span> <span class="pre">0.051,</span> <span class="pre">0.529],</span> <span class="pre">[0.78,</span> <span class="pre">0.,</span> <span class="pre">0.4],</span> <span class="pre">[0.8,</span> <span class="pre">0.,</span> <span class="pre">0.349],</span> <span class="pre">[0.82,</span> <span class="pre">0.,</span> <span class="pre">0.31],</span> <span class="pre">[0.851,</span> <span class="pre">0.,</span> <span class="pre">0.271],</span> <span class="pre">[0.878,</span> <span class="pre">0.,</span> <span class="pre">0.22],</span> <span class="pre">[0.902,</span> <span class="pre">0.,</span> <span class="pre">0.18],</span> <span class="pre">[0.922,</span> <span class="pre">0.,</span> <span class="pre">0.149]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule" title="Link to this definition"></a></dt>
+<dd><p>Tool to visualize molecules, equivalent to nglview or vmd</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.add_angle">
+<span class="sig-name descname"><span class="pre">add_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom1index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom3index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.add_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.add_angle" title="Link to this definition"></a></dt>
+<dd><p>Add an angle to between three atoms:
+atom1, atom2 and atom3
+- with the vertex in the atom2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom1index</strong> (<em>int</em>) – Indexes of the three atoms that defines the angle.</p></li>
+<li><p><strong>atom3index</strong> (<em>atom2index and</em>) – Indexes of the three atoms that defines the angle.</p></li>
+<li><p><strong>color</strong> (<em>color list. Default all gray</em><em>(</em><em>[</em><em>0.5</em><em>, </em><em>0.5</em><em>, </em><em>0.5</em><em>]</em><em>)</em>) – RGB triplet.</p></li>
+<li><p><strong>n</strong> (<em>int. Default 10</em>) – number of intermedia points to add in the arc of
+the angle.</p></li>
+<li><p><strong>factor</strong> – factor of the minimim bond lenght to define the size of the arc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(<a class="reference internal" href="tools/dofs.html#vmol.tools.dofs.VisualAngle" title="vmol.tools.dofs.VisualAngle">vmol.tools.dofs.VisualAngle</a>) Just created angle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.add_atoms">
+<span class="sig-name descname"><span class="pre">add_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_scheme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">array([[1.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">[1.,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">[0.851,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">[0.8,</span> <span class="pre">0.502,</span> <span class="pre">1.],</span> <span class="pre">[0.761,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[1.,</span> <span class="pre">0.71,</span> <span class="pre">0.71],</span> <span class="pre">[0.565,</span> <span class="pre">0.565,</span> <span class="pre">0.565],</span> <span class="pre">[0.188,</span> <span class="pre">0.314,</span> <span class="pre">0.973],</span> <span class="pre">[1.,</span> <span class="pre">0.051,</span> <span class="pre">0.051],</span> <span class="pre">[0.565,</span> <span class="pre">0.878,</span> <span class="pre">0.314],</span> <span class="pre">[0.702,</span> <span class="pre">0.89,</span> <span class="pre">0.961],</span> <span class="pre">[0.671,</span> <span class="pre">0.361,</span> <span class="pre">0.949],</span> <span class="pre">[0.541,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.749,</span> <span class="pre">0.651,</span> <span class="pre">0.651],</span> <span class="pre">[0.941,</span> <span class="pre">0.784,</span> <span class="pre">0.627],</span> <span class="pre">[1.,</span> <span class="pre">0.502,</span> <span class="pre">0.],</span> <span class="pre">[1.,</span> <span class="pre">1.,</span> <span class="pre">0.188],</span> <span class="pre">[0.122,</span> <span class="pre">0.941,</span> <span class="pre">0.122],</span> <span class="pre">[0.502,</span> <span class="pre">0.82,</span> <span class="pre">0.89],</span> <span class="pre">[0.561,</span> <span class="pre">0.251,</span> <span class="pre">0.831],</span> <span class="pre">[0.239,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.902,</span> <span class="pre">0.902,</span> <span class="pre">0.902],</span> <span class="pre">[0.749,</span> <span class="pre">0.761,</span> <span class="pre">0.78],</span> <span class="pre">[0.651,</span> <span class="pre">0.651,</span> <span class="pre">0.671],</span> <span class="pre">[0.541,</span> <span class="pre">0.6,</span> <span class="pre">0.78],</span> <span class="pre">[0.612,</span> <span class="pre">0.478,</span> <span class="pre">0.78],</span> <span class="pre">[0.878,</span> <span class="pre">0.4,</span> <span class="pre">0.2],</span> <span class="pre">[0.941,</span> <span class="pre">0.565,</span> <span class="pre">0.627],</span> <span class="pre">[0.314,</span> <span class="pre">0.816,</span> <span class="pre">0.314],</span> <span class="pre">[0.784,</span> <span class="pre">0.502,</span> <span class="pre">0.2],</span> <span class="pre">[0.49,</span> <span class="pre">0.502,</span> <span class="pre">0.69],</span> <span class="pre">[0.761,</span> <span class="pre">0.561,</span> <span class="pre">0.561],</span> <span class="pre">[0.4,</span> <span class="pre">0.561,</span> <span class="pre">0.561],</span> <span class="pre">[0.741,</span> <span class="pre">0.502,</span> <span class="pre">0.89],</span> <span class="pre">[1.,</span> <span class="pre">0.631,</span> <span class="pre">0.],</span> <span class="pre">[0.651,</span> <span class="pre">0.161,</span> <span class="pre">0.161],</span> <span class="pre">[0.361,</span> <span class="pre">0.722,</span> <span class="pre">0.82],</span> <span class="pre">[0.439,</span> <span class="pre">0.18,</span> <span class="pre">0.69],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.],</span> <span class="pre">[0.58,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">[0.58,</span> <span class="pre">0.878,</span> <span class="pre">0.878],</span> <span class="pre">[0.451,</span> <span class="pre">0.761,</span> <span class="pre">0.788],</span> <span class="pre">[0.329,</span> <span class="pre">0.71,</span> <span class="pre">0.71],</span> <span class="pre">[0.231,</span> <span class="pre">0.62,</span> <span class="pre">0.62],</span> <span class="pre">[0.141,</span> <span class="pre">0.561,</span> <span class="pre">0.561],</span> <span class="pre">[0.039,</span> <span class="pre">0.49,</span> <span class="pre">0.549],</span> <span class="pre">[0.,</span> <span class="pre">0.412,</span> <span class="pre">0.522],</span> <span class="pre">[0.753,</span> <span class="pre">0.753,</span> <span class="pre">0.753],</span> <span class="pre">[1.,</span> <span class="pre">0.851,</span> <span class="pre">0.561],</span> <span class="pre">[0.651,</span> <span class="pre">0.459,</span> <span class="pre">0.451],</span> <span class="pre">[0.4,</span> <span class="pre">0.502,</span> <span class="pre">0.502],</span> <span class="pre">[0.62,</span> <span class="pre">0.388,</span> <span class="pre">0.71],</span> <span class="pre">[0.831,</span> <span class="pre">0.478,</span> <span class="pre">0.],</span> <span class="pre">[0.58,</span> <span class="pre">0.,</span> <span class="pre">0.58],</span> <span class="pre">[0.259,</span> <span class="pre">0.62,</span> <span class="pre">0.69],</span> <span class="pre">[0.341,</span> <span class="pre">0.09,</span> <span class="pre">0.561],</span> <span class="pre">[0.,</span> <span class="pre">0.788,</span> <span class="pre">0.],</span> <span class="pre">[0.439,</span> <span class="pre">0.831,</span> <span class="pre">1.],</span> <span class="pre">[1.,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.851,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.78,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.639,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.561,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.38,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.271,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.188,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.122,</span> <span class="pre">1.,</span> <span class="pre">0.78],</span> <span class="pre">[0.,</span> <span class="pre">1.,</span> <span class="pre">0.612],</span> <span class="pre">[0.,</span> <span class="pre">0.902,</span> <span class="pre">0.459],</span> <span class="pre">[0.,</span> <span class="pre">0.831,</span> <span class="pre">0.322],</span> <span class="pre">[0.,</span> <span class="pre">0.749,</span> <span class="pre">0.22],</span> <span class="pre">[0.,</span> <span class="pre">0.671,</span> <span class="pre">0.141],</span> <span class="pre">[0.302,</span> <span class="pre">0.761,</span> <span class="pre">1.],</span> <span class="pre">[0.302,</span> <span class="pre">0.651,</span> <span class="pre">1.],</span> <span class="pre">[0.129,</span> <span class="pre">0.58,</span> <span class="pre">0.839],</span> <span class="pre">[0.149,</span> <span class="pre">0.49,</span> <span class="pre">0.671],</span> <span class="pre">[0.149,</span> <span class="pre">0.4,</span> <span class="pre">0.588],</span> <span class="pre">[0.09,</span> <span class="pre">0.329,</span> <span class="pre">0.529],</span> <span class="pre">[0.816,</span> <span class="pre">0.816,</span> <span class="pre">0.878],</span> <span class="pre">[1.,</span> <span class="pre">0.82,</span> <span class="pre">0.137],</span> <span class="pre">[0.722,</span> <span class="pre">0.722,</span> <span class="pre">0.816],</span> <span class="pre">[0.651,</span> <span class="pre">0.329,</span> <span class="pre">0.302],</span> <span class="pre">[0.341,</span> <span class="pre">0.349,</span> <span class="pre">0.38],</span> <span class="pre">[0.62,</span> <span class="pre">0.31,</span> <span class="pre">0.71],</span> <span class="pre">[0.671,</span> <span class="pre">0.361,</span> <span class="pre">0.],</span> <span class="pre">[0.459,</span> <span class="pre">0.31,</span> <span class="pre">0.271],</span> <span class="pre">[0.259,</span> <span class="pre">0.51,</span> <span class="pre">0.588],</span> <span class="pre">[0.259,</span> <span class="pre">0.,</span> <span class="pre">0.4],</span> <span class="pre">[0.,</span> <span class="pre">0.49,</span> <span class="pre">0.],</span> <span class="pre">[0.439,</span> <span class="pre">0.671,</span> <span class="pre">0.98],</span> <span class="pre">[0.,</span> <span class="pre">0.729,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.631,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.561,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.502,</span> <span class="pre">1.],</span> <span class="pre">[0.,</span> <span class="pre">0.42,</span> <span class="pre">1.],</span> <span class="pre">[0.329,</span> <span class="pre">0.361,</span> <span class="pre">0.949],</span> <span class="pre">[0.471,</span> <span class="pre">0.361,</span> <span class="pre">0.89],</span> <span class="pre">[0.541,</span> <span class="pre">0.31,</span> <span class="pre">0.89],</span> <span class="pre">[0.631,</span> <span class="pre">0.212,</span> <span class="pre">0.831],</span> <span class="pre">[0.702,</span> <span class="pre">0.122,</span> <span class="pre">0.831],</span> <span class="pre">[0.702,</span> <span class="pre">0.122,</span> <span class="pre">0.729],</span> <span class="pre">[0.702,</span> <span class="pre">0.051,</span> <span class="pre">0.651],</span> <span class="pre">[0.741,</span> <span class="pre">0.051,</span> <span class="pre">0.529],</span> <span class="pre">[0.78,</span> <span class="pre">0.,</span> <span class="pre">0.4],</span> <span class="pre">[0.8,</span> <span class="pre">0.,</span> <span class="pre">0.349],</span> <span class="pre">[0.82,</span> <span class="pre">0.,</span> <span class="pre">0.31],</span> <span class="pre">[0.851,</span> <span class="pre">0.,</span> <span class="pre">0.271],</span> <span class="pre">[0.878,</span> <span class="pre">0.,</span> <span class="pre">0.22],</span> <span class="pre">[0.902,</span> <span class="pre">0.,</span> <span class="pre">0.18],</span> <span class="pre">[0.922,</span> <span class="pre">0.,</span> <span class="pre">0.149]])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.add_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.add_atoms" title="Link to this definition"></a></dt>
+<dd><p>Add vpython spheres that are representations of atoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atoms</strong> (<em>ase.Atoms</em>) – set of atoms to be rendered.</p></li>
+<li><p><strong>color_scheme</strong> (<em>dict</em>) – color scheme of the atoms. Default = jml_colors</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – set the size of the atoms. Default = 0.2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(list) set of created vpython spheres, namely, atoms in the scene.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.add_bond">
+<span class="sig-name descname"><span class="pre">add_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom1index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">vector</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">cylinder</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.add_bond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.add_bond" title="Link to this definition"></a></dt>
+<dd><p>Add a bond between two atoms:
+atom1 and atom2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom2index</strong><strong>)</strong> (<em>atom1index</em><em> (</em><em>and</em>) – Indexes of the atoms to be connected according with g09 convention.</p></li>
+<li><p><strong>color</strong> (<em>list. Default gray</em><em>(</em><em>[</em><em>0.5</em><em>, </em><em>0.5</em><em>, </em><em>0.5</em><em>]</em><em>)</em>) – RGB triplet.</p></li>
+<li><p><strong>radius</strong> (<em>float. Default 0.1</em>) – Radius of the bond.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(vpython.cylinder) representation of the bond.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.add_bonds">
+<span class="sig-name descname"><span class="pre">add_bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms1indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms2indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.07</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.add_bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.add_bonds" title="Link to this definition"></a></dt>
+<dd><p>Add a bond between each pair of atoms corresponding to
+two lists of atoms:
+atoms1 and atoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom2index</strong><strong>)</strong> (<em>atom1index</em><em> (</em><em>and</em>) – Indexes of the atoms to be connected according with g09
+convention.</p></li>
+<li><p><strong>colors</strong> (<em>list</em><em> of </em><em>color lists. Default all gray</em><em>(</em><em>[</em><em>0.5</em><em>, </em><em>0.5</em><em>, </em><em>0.5</em><em>]</em><em>)</em>) – RGB triplets for each of the bonds. It can be one a triplet
+in case of just one color in all bonds.</p></li>
+<li><p><strong>radius</strong> (<em>float</em><em> or </em><em>list</em><em> of </em><em>floats. Default 0.1</em>) – radius of each bond.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(dict) all the DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.add_dihedral">
+<span class="sig-name descname"><span class="pre">add_dihedral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom1index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom3index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom4index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="tools/dofs.html#vmol.tools.dofs.VisualAngle" title="vmol.tools.dofs.VisualAngle"><span class="pre">VisualAngle</span></a></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.add_dihedral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.add_dihedral" title="Link to this definition"></a></dt>
+<dd><p>Add a dihedral angle between four atoms:
+atom1, atom2, atom3 and atom4
+- with the vertex in the midle of the atom 2 and 3</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom1index</strong> (<em>int</em>) – Indexes of the three atoms that defines the angle.</p></li>
+<li><p><strong>atom2index</strong> (<em>int</em>) – Indexes of the three atoms that defines the angle.</p></li>
+<li><p><strong>atom4index</strong> (<em>atom3index and</em>) – Indexes of the three atoms that defines the angle.</p></li>
+<li><p><strong>color</strong> (<em>color list</em>) – RGB triplet. Default all gray([0.5, 0.5, 0.5])</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – number of intermedia points to add in the arc of
+the angle. Default 20</p></li>
+<li><p><strong>factor</strong> (<em>float</em>) – factor of the minimim bond lenght to define the size of the arc.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(<a class="reference internal" href="tools/dofs.html#vmol.tools.dofs.VisualAngle" title="vmol.tools.dofs.VisualAngle">vmol.tools.dofs.VisualAngle</a>) Just created dihedral angle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.add_dof">
+<span class="sig-name descname"><span class="pre">add_dof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.add_dof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.add_dof" title="Link to this definition"></a></dt>
+<dd><p>Add the degree of freedom to the scene</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dof</strong> (<em>list</em>) – label of the degree of freedom according with g09 convention.</p></li>
+<li><p><strong>**kwargs</strong> (<em>arguments corresponding with the DOF you want to add.</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Object used to represent the DOF. For further detail, check add_&lt;dof&gt;,</em></p></li>
+<li><p><em>where &lt;dof&gt; could be bond, angle or dihedral.</em></p></li>
+<li><p><em>Usage</em></p></li>
+<li><p><em>=======</em></p></li>
+<li><p><em>VMolecule.add_dof(dof), where</em> – dof=(1, 2) means a bond between atoms 1 and 2
+dof=(1, 2, 3) means an angle between atoms 1, 2 and 3
+dof=(1, 2, 3, 4) means a dihedral angle between atoms 1, 2, 3 and 4</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.download_image">
+<span class="sig-name descname"><span class="pre">download_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.download_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.download_image" title="Link to this definition"></a></dt>
+<dd><p>Save displayed scene in a png file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – name of the image file.</p></li>
+<li><p><strong>Note</strong> (<em>So far</em><em>, </em><em>I couldn't avoid to render the saving-file interface that</em>) – </p></li>
+<li><p><strong>promps</strong> – </p></li>
+<li><p><strong>render</strong> (<em>even when a name is given. This makes annoyng to</em>) – </p></li>
+<li><p><strong>animation.</strong> (<em>n-images for an</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_all_angles">
+<span class="sig-name descname"><span class="pre">hide_all_angles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_all_angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_all_angles" title="Link to this definition"></a></dt>
+<dd><p>Hide all the angles in the scene</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>(dict) all the DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_all_bonds">
+<span class="sig-name descname"><span class="pre">hide_all_bonds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_all_bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_all_bonds" title="Link to this definition"></a></dt>
+<dd><p>Hide all bonds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>(dict) all hidden DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_all_dihedrals">
+<span class="sig-name descname"><span class="pre">hide_all_dihedrals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_all_dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_all_dihedrals" title="Link to this definition"></a></dt>
+<dd><p>Hide all the dihedrals in the scene</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>(dict) all the DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_angle">
+<span class="sig-name descname"><span class="pre">hide_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom1index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom3index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_angle" title="Link to this definition"></a></dt>
+<dd><p>Hide one angle between three atoms:
+atoms1, atoms2 and atom3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>atom3index</strong> (<em>atom1index atom2index and</em>) – Indexes of the atoms that are connected. This bond
+will be hidden.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(dict) all the DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_atom">
+<span class="sig-name descname"><span class="pre">hide_atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atomindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">sphere</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_atom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_atom" title="Link to this definition"></a></dt>
+<dd><p>Hide one atom in the scene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>atomindex</strong> (<em>int</em>) – Index of the atom to be hidden.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(vpython.sphere) hidden vpython atom</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_bond">
+<span class="sig-name descname"><span class="pre">hide_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom1index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_bond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_bond" title="Link to this definition"></a></dt>
+<dd><p>Hide one bond between two atoms:
+atoms1 and atoms2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>atom2index</strong><strong>)</strong> (<em>atom1index</em><em> (</em><em>and</em>) – Indexes of the atoms that are connected. This bond
+will be hidden.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(dict) all the DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_bonds">
+<span class="sig-name descname"><span class="pre">hide_bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms1indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms2indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_bonds" title="Link to this definition"></a></dt>
+<dd><p>Hide several bonds in the plot between two list of atoms:
+atoms1 and atoms2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>atom2index</strong><strong>)</strong> (<em>atom1index</em><em> (</em><em>and</em>) – Indexes of the atoms that are connected. If None atom index is
+defined, all the bonds are hidden. If only one atom index is
+defined, all the bonds with that atom will hidden.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(dict) all hidden DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+<li><p><strong>Note</strong> (<em>if atoms2 is None, all bonds with atoms1 will me hidden.</em>)</p></li>
+<li><p><em>If atoms1 and atoms2 are None, all bonds in the structure are</em></p></li>
+<li><p><em>hidden.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.hide_dihedral">
+<span class="sig-name descname"><span class="pre">hide_dihedral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom1index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom2index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom3index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom4index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.hide_dihedral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.hide_dihedral" title="Link to this definition"></a></dt>
+<dd><p>Hide one dihedral angle defined by three atoms:
+atoms1, atoms2 and atom3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>atom3index</strong> (<em>atom1index atom2index and</em>) – Indexes of the atoms that are connected. This bond
+will be hidden.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(dict) all the DOFs in the system. keys -&gt; dof names,</em></p></li>
+<li><p><em>values -&gt; vpython.objects</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.setting_canvas">
+<span class="sig-name descname"><span class="pre">setting_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">canvas</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.setting_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.setting_canvas" title="Link to this definition"></a></dt>
+<dd><p>Setting vpython scene.</p>
+<p>**kwargs: vpython.canvas attibutes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.show_atom">
+<span class="sig-name descname"><span class="pre">show_atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atomindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">sphere</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.show_atom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.show_atom" title="Link to this definition"></a></dt>
+<dd><p>Show one atom in the scene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>atomindex</strong> (<em>int</em>) – Index of the atom to be shown.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(vpython.sphere) hidden vpython atom</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.show_axis">
+<span class="sig-name descname"><span class="pre">show_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center:</span> <span class="pre">~vpython.cyvector.vector</span> <span class="pre">=</span> <span class="pre">&lt;0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">0&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.show_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.show_axis" title="Link to this definition"></a></dt>
+<dd><p>show xyz axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>show</strong> (<em>bool</em>) – True to show it. Default = True</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – thickness of the arrows</p></li>
+<li><p><strong>center</strong> (<em>vector</em><em> or </em><em>array</em>) – position of the origin</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(list) list with the xyz vpytho arrows</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.update_atom">
+<span class="sig-name descname"><span class="pre">update_atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">sphere</span></span></span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.update_atom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.update_atom" title="Link to this definition"></a></dt>
+<dd><p>Update atom properties</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – index of the atom to be modified.</p></li>
+<li><p><strong>**kwargs</strong> (<em>arguments to be modified</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(vpython.sphere) sphere representing the atom</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.view.VMolecule.update_obj">
+<span class="sig-name descname"><span class="pre">update_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vmol/view.html#VMolecule.update_obj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.view.VMolecule.update_obj" title="Link to this definition"></a></dt>
+<dd><p>Changes attributes of an object. Specially useful to update
+positions, size and colors in vpython scene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>obj</em>) – object to be modified.</p></li>
+<li><p><strong>**kwargs</strong> (<em>attributes and values to be modified.</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(obj) Modified Object</em></p></li>
+<li><p><em>Usage</em></p></li>
+<li><p><em>=====</em></p></li>
+<li><p><em>VMolecule.update_obj(vpython.sphere, radius=10)</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tools/transformer.html" class="btn btn-neutral float-left" title="transformer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Daniel Sucerquia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

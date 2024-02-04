@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vmol.view &mdash; vmol 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            vmol
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">vmol</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">vmol.view</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for vmol.view</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span> <span class="nn">ase.data.colors</span> <span class="kn">import</span> <span class="n">jmol_colors</span>
+<span class="kn">from</span> <span class="nn">vmol.tools.transformer</span> <span class="kn">import</span> <span class="n">AtomicTrans</span>
+<span class="kn">from</span> <span class="nn">vmol.tools.dofs</span> <span class="kn">import</span> <span class="n">VisualAngle</span>
+<span class="kn">from</span> <span class="nn">vpython</span> <span class="kn">import</span> <span class="n">vector</span>
+<span class="kn">import</span> <span class="nn">vpython</span> <span class="k">as</span> <span class="nn">vp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># hides the canvas by default and allows to create a new</span>
+<span class="c1"># scene when a new MolView is created</span>
+<span class="n">vp</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="VMolecule">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule">[docs]</a>
+<span class="k">class</span> <span class="nc">VMolecule</span><span class="p">(</span><span class="n">AtomicTrans</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tool to visualize molecules, equivalent to nglview or vmd&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+                 <span class="n">color_scheme</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">jmol_colors</span><span class="p">,</span>
+                 <span class="n">show_axis</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">alignment</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">frame</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atoms: ase.Atoms</span>
+<span class="sd">            Atoms object with the molecule structure</span>
+<span class="sd">        color_scheme: dict</span>
+<span class="sd">            color scheme of the atoms. Default = jml_colors</span>
+<span class="sd">        show_axis: bool</span>
+<span class="sd">            True to show xyz axis. Default = False</span>
+<span class="sd">        alignment: list[int]</span>
+<span class="sd">            list of three indexes corresponding to the indexes of the atoms in</span>
+<span class="sd">            the xy plane. The first two atoms are set on the x axis.</span>
+<span class="sd">        frame: int</span>
+<span class="sd">            In case to be a trajectory, the index of the captured frame. In</span>
+<span class="sd">            case of being a single point configuration, frame is always 0.</span>
+<span class="sd">        radius: float</span>
+<span class="sd">            set the size of the atoms. Default = 0.2</span>
+<span class="sd">        **kwargs of Vpython canvas</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;background&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;background&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asvector</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;background&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vp</span> <span class="o">=</span> <span class="n">vp</span>
+
+        <span class="c1"># next line imports the creates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">canvas</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># atoms and trajectory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">alignment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">index3</span> <span class="o">=</span> <span class="n">alignment</span>
+                <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xy_alignment</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">index3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Atoms</span><span class="p">),</span> <span class="s2">&quot;atoms must be an ase.Atoms&quot;</span> <span class="o">+</span>\
+                <span class="s2">&quot; object or a list of ase.Atoms&quot;</span>
+            <span class="k">if</span> <span class="n">alignment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">index3</span> <span class="o">=</span> <span class="n">alignment</span>
+                <span class="n">atoms</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">xy_alignment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">index3</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="n">show_axis</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color_scheme</span> <span class="o">=</span> <span class="n">color_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Unfortunately, vpython has problems removing objects</span>
+        <span class="c1"># (check vpython.baseObj.delete,</span>
+        <span class="c1"># then I just keep them invisible, in case to reload,</span>
+        <span class="c1"># just change to visibles dofs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_atoms</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+        <span class="c1"># vpython such that the user can use vpython commands as well</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="n">vp</span>
+
+    <span class="c1"># region 1_vpython-tools</span>
+    <span class="k">def</span> <span class="nf">_asvector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arraylike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Changes an array to a vpython vector</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (vpython.vector) transformed array-like into vpython.vector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arraylike</span><span class="p">,</span> <span class="n">vp</span><span class="o">.</span><span class="n">vector</span><span class="p">):</span>
+            <span class="n">arraylike</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="o">*</span><span class="n">arraylike</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">arraylike</span>
+
+<div class="viewcode-block" id="VMolecule.update_obj">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.update_obj">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Changes attributes of an object. Specially useful to update</span>
+<span class="sd">        positions, size and colors in vpython scene.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        obj: obj</span>
+<span class="sd">            object to be modified.</span>
+<span class="sd">        **kwargs: attributes and values to be modified.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (obj) Modified Object</span>
+
+<span class="sd">        Usage</span>
+<span class="sd">        =====</span>
+<span class="sd">        VMolecule.update_obj(vpython.sphere, radius=10)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># The next conditional assumes that none of the vpyhon</span>
+            <span class="c1"># objects has lists as parameters.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                <span class="nb">list</span><span class="p">,</span>
+                                <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="o">*</span><span class="n">val</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.setting_canvas">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.setting_canvas">[docs]</a>
+    <span class="k">def</span> <span class="nf">setting_canvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vp</span><span class="o">.</span><span class="n">canvas</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setting vpython scene.</span>
+
+<span class="sd">        \*\*kwargs: vpython.canvas attibutes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">scene</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_obj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">scene</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.show_axis">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.show_axis">[docs]</a>
+    <span class="k">def</span> <span class="nf">show_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                  <span class="n">size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+                  <span class="n">center</span><span class="p">:</span> <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;show xyz axis</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        show: bool</span>
+<span class="sd">            True to show it. Default = True</span>
+<span class="sd">        size: float</span>
+<span class="sd">            thickness of the arrows</span>
+<span class="sd">        center: vector or array</span>
+<span class="sd">            position of the origin</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (list) list with the xyz vpytho arrows</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+                         <span class="n">axis</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">color</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+                         <span class="n">axis</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">color</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+                         <span class="n">axis</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span>
+                         <span class="n">color</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                         <span class="n">canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="n">show</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.download_image">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.download_image">[docs]</a>
+    <span class="k">def</span> <span class="nf">download_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save displayed scene in a png file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        name: str</span>
+<span class="sd">            name of the image file.</span>
+
+<span class="sd">        Note: So far, I couldn&#39;t avoid to render the saving-file interface that</span>
+<span class="sd">        promps, even when a name is given. This makes annoyng to render</span>
+<span class="sd">        n-images for an animation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region 2_Atoms</span>
+<div class="viewcode-block" id="VMolecule.add_atoms">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.add_atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">color_scheme</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">jmol_colors</span><span class="p">,</span>
+                  <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add vpython spheres that are representations of atoms.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atoms: ase.Atoms</span>
+<span class="sd">            set of atoms to be rendered.</span>
+<span class="sd">        color_scheme: dict</span>
+<span class="sd">            color scheme of the atoms. Default = jml_colors</span>
+<span class="sd">        radius: float</span>
+<span class="sd">            set the size of the atoms. Default = 0.2</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (list) set of created vpython spheres, namely, atoms in the scene.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+            <span class="n">sphere</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="o">*</span><span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">),</span>
+                               <span class="n">color</span><span class="o">=</span><span class="n">vector</span><span class="p">(</span><span class="o">*</span><span class="n">color_scheme</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">number</span><span class="p">]),</span>
+                               <span class="n">canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span>
+                               <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+            <span class="n">sphere</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sphere</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_atom">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_atom">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_atom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomindex</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vp</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide one atom in the scene.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atomindex: int</span>
+<span class="sd">            Index of the atom to be hidden.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (vpython.sphere) hidden vpython atom</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atomindex</span><span class="p">]</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atomindex</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.show_atom">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.show_atom">[docs]</a>
+    <span class="k">def</span> <span class="nf">show_atom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomindex</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vp</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show one atom in the scene.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atomindex: int</span>
+<span class="sd">            Index of the atom to be shown.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (vpython.sphere) hidden vpython atom</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atomindex</span><span class="p">]</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atomindex</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.update_atom">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.update_atom">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_atom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vp</span><span class="o">.</span><span class="n">sphere</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update atom properties</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        index: int</span>
+<span class="sd">            index of the atom to be modified.</span>
+<span class="sd">        **kwargs: arguments to be modified</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (vpython.sphere) sphere representing the atom</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">atom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_obj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># TODO: hide next block</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; === Deprecated ===</span>
+<span class="sd">        for attr, val in kwargs.items():</span>
+<span class="sd">            # The next conditional assumes that none of the vpyhon</span>
+<span class="sd">            # objects has lists as parameters.</span>
+<span class="sd">            if isinstance(val, (np.ndarray,</span>
+<span class="sd">                                list,</span>
+<span class="sd">                                tuple)):</span>
+<span class="sd">                val = vector(*val)</span>
+<span class="sd">            setattr(self.vatoms[index], attr, val)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">atom</span></div>
+
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region 2_DOFs_1_bonds</span>
+<div class="viewcode-block" id="VMolecule.add_bond">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.add_bond">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_bond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">color</span><span class="p">:</span> <span class="n">vector</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">vp</span><span class="o">.</span><span class="n">cylinder</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond between two atoms:</span>
+<span class="sd">        atom1 and atom2</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index (and atom2index): int</span>
+<span class="sd">            Indexes of the atoms to be connected according with g09 convention.</span>
+<span class="sd">        color: list. Default gray([0.5, 0.5, 0.5])</span>
+<span class="sd">            RGB triplet.</span>
+<span class="sd">        radius: float. Default 0.1</span>
+<span class="sd">            Radius of the bond.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (vpython.cylinder) representation of the bond.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bond_extreme</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom1index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">bond_axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom2index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">-</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom1index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span>
+
+        <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># TODO: add ball+stick colors as nglview</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asvector</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">atom1index</span> <span class="o">&gt;</span> <span class="n">atom2index</span><span class="p">:</span>
+            <span class="n">indexes</span> <span class="o">=</span> <span class="n">indexes</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">)</span>
+
+        <span class="c1"># If already exists</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_obj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                            <span class="n">pos</span><span class="o">=</span><span class="n">bond_extreme</span><span class="p">,</span>
+                            <span class="n">axis</span><span class="o">=</span><span class="n">bond_axis</span><span class="p">,</span>
+                            <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="c1"># If it was previously hidden. It means it is there but it is</span>
+        <span class="c1"># invisible.</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_obj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                            <span class="n">pos</span><span class="o">=</span><span class="n">bond_extreme</span><span class="p">,</span>
+                            <span class="n">axis</span><span class="o">=</span><span class="n">bond_axis</span><span class="p">,</span>
+                            <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="c1"># In case it was not created previously:</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">cylinder</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">bond_extreme</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="n">bond_axis</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                        <span class="n">canvas</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">)</span>
+
+        <span class="n">b</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.add_bonds">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.add_bonds">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_bonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms1indexes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                  <span class="n">atoms2indexes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                  <span class="n">colors</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">radii</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.07</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond between each pair of atoms corresponding to</span>
+<span class="sd">        two lists of atoms:</span>
+<span class="sd">        atoms1 and atoms.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index (and atom2index): list[int]</span>
+<span class="sd">            Indexes of the atoms to be connected according with g09</span>
+<span class="sd">            convention.</span>
+<span class="sd">        colors: list of color lists. Default all gray([0.5, 0.5, 0.5])</span>
+<span class="sd">            RGB triplets for each of the bonds. It can be one a triplet</span>
+<span class="sd">            in case of just one color in all bonds.</span>
+<span class="sd">        radius: float or list of floats. Default 0.1</span>
+<span class="sd">            radius of each bond.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all the DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">radii</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">radii</span> <span class="o">=</span> <span class="p">[</span><span class="n">radii</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms2indexes</span><span class="p">),</span> \
+            <span class="s2">&quot;The number of atoms in both lists must be the same&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">),</span> \
+            <span class="s2">&quot;The number of colors in must be the same as the number of atoms&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> \
+            <span class="s2">&quot;The number of radii must be the same as the number of atoms&quot;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_bond</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                          <span class="n">atoms2indexes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                          <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                          <span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_bond">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_bond">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_bond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide one bond between two atoms:</span>
+<span class="sd">        atoms1 and atoms2.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index (and atom2index): int</span>
+<span class="sd">            Indexes of the atoms that are connected. This bond</span>
+<span class="sd">            will be hidden.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all the DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">]</span>
+        <span class="n">indexes</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_bonds">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_bonds">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_bonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms1indexes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">atoms2indexes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide several bonds in the plot between two list of atoms:</span>
+<span class="sd">        atoms1 and atoms2.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index (and atom2index): list[int]</span>
+<span class="sd">            Indexes of the atoms that are connected. If None atom index is</span>
+<span class="sd">            defined, all the bonds are hidden. If only one atom index is</span>
+<span class="sd">            defined, all the bonds with that atom will hidden.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all hidden DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects</span>
+
+<span class="sd">        Note: if atoms2 is None, all bonds with atoms1 will me hidden.</span>
+<span class="sd">        If atoms1 and atoms2 are None, all bonds in the structure are</span>
+<span class="sd">        hidden.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">atoms1indexes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">atoms2indexes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">todel</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                    <span class="n">todel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">todel</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span>
+
+        <span class="k">elif</span> <span class="p">(</span><span class="n">atoms1indexes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">atoms2indexes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">atoms1indexes</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="ow">in</span> <span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms2indexes</span><span class="p">),</span> \
+                <span class="s2">&quot;The number of atoms in both lists must be the same&quot;</span>
+            <span class="k">for</span> <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">atoms1indexes</span><span class="p">,</span> <span class="n">atoms2indexes</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hide_bond</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_all_bonds">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_all_bonds">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_all_bonds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide all bonds</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all hidden DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hide_bonds</span><span class="p">()</span></div>
+
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region 2_DOFs_2_angles</span>
+<div class="viewcode-block" id="VMolecule.add_angle">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.add_angle">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                  <span class="n">atom2index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                  <span class="n">atom3index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                  <span class="n">color</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+                  <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an angle to between three atoms:</span>
+<span class="sd">        atom1, atom2 and atom3</span>
+<span class="sd">        - with the vertex in the atom2</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index, atom2index and atom3index: int</span>
+<span class="sd">            Indexes of the three atoms that defines the angle.</span>
+<span class="sd">        color: color list. Default all gray([0.5, 0.5, 0.5])</span>
+<span class="sd">            RGB triplet.</span>
+<span class="sd">        n: int. Default 10</span>
+<span class="sd">            number of intermedia points to add in the arc of</span>
+<span class="sd">            the angle.</span>
+<span class="sd">        factor:</span>
+<span class="sd">            factor of the minimim bond lenght to define the size of the arc.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (vmol.tools.dofs.VisualAngle) Just created angle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asvector</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+        <span class="c1"># TODO: hide next block</span>
+        <span class="c1"># if self.is_trajectory:</span>
+        <span class="c1">#    atoms = self.atoms[self.viewer.view.frame]</span>
+
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">,</span> <span class="n">atom3index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">atom1index</span> <span class="o">&gt;</span> <span class="n">atom3index</span><span class="p">:</span>
+            <span class="n">indexes</span> <span class="o">=</span> <span class="n">indexes</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">)</span>
+
+        <span class="n">vertex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom2index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">side1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom1index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">-</span> <span class="n">vertex</span>
+        <span class="n">side2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom3index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">-</span> <span class="n">vertex</span>
+
+        <span class="c1"># If already exists.</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">update_vertexes</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">vertex</span><span class="p">,</span>
+                                            <span class="n">a</span><span class="o">=</span><span class="n">side1</span><span class="p">,</span>
+                                            <span class="n">b</span><span class="o">=</span><span class="n">side2</span><span class="p">,</span>
+                                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="c1"># If it was previously hidden. It means it is there but it is</span>
+        <span class="c1"># invisible.</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">update_vertexes</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">vertex</span><span class="p">,</span>
+                                            <span class="n">a</span><span class="o">=</span><span class="n">side1</span><span class="p">,</span>
+                                            <span class="n">b</span><span class="o">=</span><span class="n">side2</span><span class="p">,</span>
+                                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="c1"># In case it was not created previously:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">VisualAngle</span><span class="p">(</span><span class="n">side1</span><span class="p">,</span> <span class="n">side2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span>
+                                      <span class="n">origin</span><span class="o">=</span><span class="n">vertex</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                                      <span class="n">scene</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span>
+                                      <span class="n">factor</span><span class="o">=</span><span class="n">factor</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">,</span>
+                                            <span class="n">atom3index</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_angle">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_angle">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                     <span class="n">atom2index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                     <span class="n">atom3index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide one angle between three atoms:</span>
+<span class="sd">        atoms1, atoms2 and atom3.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index atom2index and atom3index: int</span>
+<span class="sd">            Indexes of the atoms that are connected. This bond</span>
+<span class="sd">            will be hidden.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all the DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">,</span> <span class="n">atom3index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">atom1index</span> <span class="o">&gt;</span> <span class="n">atom3index</span><span class="p">:</span>
+            <span class="n">indexes</span> <span class="o">=</span> <span class="n">indexes</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_all_angles">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_all_angles">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_all_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide all the angles in the scene</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all the DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dof</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span></div>
+
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region 2_DOFs_3_dihedrals</span>
+<div class="viewcode-block" id="VMolecule.add_dihedral">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.add_dihedral">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_dihedral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                     <span class="n">atom2index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">atom3index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                     <span class="n">atom4index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                     <span class="n">color</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+                     <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VisualAngle</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a dihedral angle between four atoms:</span>
+<span class="sd">        atom1, atom2, atom3 and atom4</span>
+<span class="sd">        - with the vertex in the midle of the atom 2 and 3</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index, atom2index, atom3index and atom4index: int</span>
+<span class="sd">            Indexes of the three atoms that defines the angle.</span>
+<span class="sd">        color: color list</span>
+<span class="sd">            RGB triplet. Default all gray([0.5, 0.5, 0.5])</span>
+<span class="sd">        n: int</span>
+<span class="sd">            number of intermedia points to add in the arc of</span>
+<span class="sd">            the angle. Default 20</span>
+<span class="sd">        factor: float</span>
+<span class="sd">            factor of the minimim bond lenght to define the size of the arc.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (vmol.tools.dofs.VisualAngle) Just created dihedral angle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asvector</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+
+        <span class="c1"># TODO: delete next block</span>
+        <span class="c1"># if self.is_trajectory:</span>
+        <span class="c1">#    atoms = self.atoms[self.viewer.view.frame]</span>
+
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">,</span> <span class="n">atom3index</span><span class="p">,</span> <span class="n">atom4index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">atom1index</span> <span class="o">&gt;</span> <span class="n">atom4index</span><span class="p">:</span>
+            <span class="n">indexes</span> <span class="o">=</span> <span class="n">indexes</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">)</span>
+
+        <span class="n">axis</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom3index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">-</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom2index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">vertex</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom3index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">+</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom2index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">axis1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom1index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">-</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom2index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">axis2</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom4index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">-</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">[</span><span class="n">atom3index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+
+        <span class="n">side1</span> <span class="o">=</span> <span class="n">axis1</span> <span class="o">-</span> <span class="n">vp</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">axis1</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+        <span class="n">side2</span> <span class="o">=</span> <span class="n">axis2</span> <span class="o">-</span> <span class="n">vp</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">axis2</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+
+        <span class="c1"># If already exists.</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">update_vertexes</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">vertex</span><span class="p">,</span>
+                                            <span class="n">a</span><span class="o">=</span><span class="n">side1</span><span class="p">,</span>
+                                            <span class="n">b</span><span class="o">=</span><span class="n">side2</span><span class="p">,</span>
+                                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="c1"># If it was previously hidden. It means it is still there but it is</span>
+        <span class="c1"># invisible.</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">update_vertexes</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">vertex</span><span class="p">,</span>
+                                            <span class="n">a</span><span class="o">=</span><span class="n">side1</span><span class="p">,</span>
+                                            <span class="n">b</span><span class="o">=</span><span class="n">side2</span><span class="p">,</span>
+                                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="c1"># In case it was not created previously:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">VisualAngle</span><span class="p">(</span><span class="n">side1</span><span class="p">,</span> <span class="n">side2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span>
+                                      <span class="n">origin</span><span class="o">=</span><span class="n">vertex</span><span class="p">,</span>
+                                      <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                                      <span class="n">scene</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span>
+                                      <span class="n">factor</span><span class="o">=</span><span class="n">factor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">,</span>
+                                            <span class="n">atom3index</span><span class="p">,</span> <span class="n">atom4index</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_dihedral">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_dihedral">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_dihedral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                        <span class="n">atom3index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">atom4index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide one dihedral angle defined by three atoms:</span>
+<span class="sd">        atoms1, atoms2 and atom3.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        atom1index atom2index and atom3index: int</span>
+<span class="sd">            Indexes of the atoms that are connected. This bond</span>
+<span class="sd">            will be hidden.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all the DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom1index</span><span class="p">,</span> <span class="n">atom2index</span><span class="p">,</span> <span class="n">atom3index</span><span class="p">,</span> <span class="n">atom4index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">atom1index</span> <span class="o">&gt;</span> <span class="n">atom4index</span><span class="p">:</span>
+            <span class="n">indexes</span> <span class="o">=</span> <span class="n">indexes</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span></div>
+
+
+<div class="viewcode-block" id="VMolecule.hide_all_dihedrals">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.hide_all_dihedrals">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_all_dihedrals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide all the dihedrals in the scene</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        (dict) all the DOFs in the system. keys -&gt; dof names,</span>
+<span class="sd">        values -&gt; vpython.objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dof</span><span class="p">)</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_objs</span></div>
+
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region 2_DOFs_4_arbitrary</span>
+<div class="viewcode-block" id="VMolecule.add_dof">
+<a class="viewcode-back" href="../../modules/view.html#vmol.view.VMolecule.add_dof">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_dof</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dof</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the degree of freedom to the scene</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ==========</span>
+<span class="sd">        dof: list</span>
+<span class="sd">            label of the degree of freedom according with g09 convention.</span>
+<span class="sd">        **kwargs: arguments corresponding with the DOF you want to add.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        =======</span>
+<span class="sd">        Object used to represent the DOF. For further detail, check add_&lt;dof&gt;,</span>
+<span class="sd">        where &lt;dof&gt; could be bond, angle or dihedral.</span>
+
+<span class="sd">        Usage</span>
+<span class="sd">        =======</span>
+<span class="sd">        VMolecule.add_dof(dof), where:</span>
+<span class="sd">            dof=(1, 2) means a bond between atoms 1 and 2</span>
+<span class="sd">            dof=(1, 2, 3) means an angle between atoms 1, 2 and 3</span>
+<span class="sd">            dof=(1, 2, 3, 4) means a dihedral angle between atoms 1, 2, 3 and 4</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bond&quot;</span><span class="p">,</span> <span class="s2">&quot;angle&quot;</span><span class="p">,</span> <span class="s2">&quot;dihedral&quot;</span><span class="p">]</span>
+        <span class="n">type_dof</span> <span class="o">=</span> <span class="n">types</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">dof</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">type_dof</span> <span class="o">==</span> <span class="s2">&quot;bond&quot;</span><span class="p">:</span>
+            <span class="n">index1</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">index2</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_bond</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">type_dof</span> <span class="o">==</span> <span class="s2">&quot;angle&quot;</span><span class="p">:</span>
+            <span class="n">index1</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">index2</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">index3</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_angle</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">index3</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">type_dof</span> <span class="o">==</span> <span class="s2">&quot;dihedral&quot;</span><span class="p">:</span>
+            <span class="n">index1</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">index2</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">index3</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">index4</span> <span class="o">=</span> <span class="n">dof</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_dihedral</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">index3</span><span class="p">,</span>
+                                     <span class="n">index4</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dof</span><span class="si">}</span><span class="s2"> is not an accepted degree of freedom.&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region update_frame</span>
+    <span class="k">def</span> <span class="nf">update_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vatoms</span><span class="p">):</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dofs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_dof</span><span class="p">(</span><span class="n">dof</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">frame</span></div>
+
+    <span class="c1"># endregion</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Daniel Sucerquia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

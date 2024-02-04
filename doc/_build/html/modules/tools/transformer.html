@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>transformer &mdash; vmol 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="view" href="../view.html" />
+    <link rel="prev" title="dofs" href="dofs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            vmol
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dofs.html">dofs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">transformer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans"><code class="docutils literal notranslate"><span class="pre">AtomicTrans</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans.align_axis"><code class="docutils literal notranslate"><span class="pre">AtomicTrans.align_axis()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans.align_plane"><code class="docutils literal notranslate"><span class="pre">AtomicTrans.align_plane()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans.apply_trans"><code class="docutils literal notranslate"><span class="pre">AtomicTrans.apply_trans()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans.rot_x"><code class="docutils literal notranslate"><span class="pre">AtomicTrans.rot_x()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans.rot_y"><code class="docutils literal notranslate"><span class="pre">AtomicTrans.rot_y()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans.rot_z"><code class="docutils literal notranslate"><span class="pre">AtomicTrans.rot_z()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vmol.tools.transformer.AtomicTrans.xy_alignment"><code class="docutils literal notranslate"><span class="pre">AtomicTrans.xy_alignment()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../view.html">view</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">vmol</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Modules</a></li>
+      <li class="breadcrumb-item active">transformer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/modules/tools/transformer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="transformer">
+<span id="id1"></span><h1>transformer<a class="headerlink" href="#transformer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vmol.tools.transformer.</span></span><span class="sig-name descname"><span class="pre">AtomicTrans</span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans.align_axis">
+<span class="sig-name descname"><span class="pre">align_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans.align_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans.align_axis" title="Link to this definition"></a></dt>
+<dd><p>Apply the necessary rotations to  align a vector with the positive x
+axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vector</strong> (<em>numpy array</em>) – vector to be aligned with the positive x axis.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(numpy.array) transformation matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans.align_plane">
+<span class="sig-name descname"><span class="pre">align_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans.align_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans.align_plane" title="Link to this definition"></a></dt>
+<dd><p>Rotation around x axis to set a vector in the xy plane</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vector</strong> (<em>numpy array</em>) – vector to be aligned with the positive xy plane.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(numpy.array) rotation matrix around x axis lo align the vector with</em></p></li>
+<li><p><em>the xy plane.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans.apply_trans">
+<span class="sig-name descname"><span class="pre">apply_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans.apply_trans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans.apply_trans" title="Link to this definition"></a></dt>
+<dd><p>Apply a transformation to all vector positions of the atoms object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atoms</strong> (<em>ase.Atoms</em>) – Atoms object to apply the transformation.</p></li>
+<li><p><strong>trans</strong> (<em>numpy.array</em>) – matrix transformation to apply to the atom positions.</p></li>
+<li><p><strong>shift</strong> (<em>numpy.array</em>) – translation transformation.</p></li>
+<li><p><strong>indexes</strong> (<em>list</em>) – indexes of the atoms to be transformed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>(list) new set of positions of all atoms. Even those that were not</em></p></li>
+<li><p><em>transformed.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans.rot_x">
+<span class="sig-name descname"><span class="pre">rot_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans.rot_x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans.rot_x" title="Link to this definition"></a></dt>
+<dd><p>Rotation matrix around x axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>[</em><em>radians</em><em>]</em>) – angle to rotate around the x axis</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(numpy.array) [3float x 3float] Rotation matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans.rot_y">
+<span class="sig-name descname"><span class="pre">rot_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans.rot_y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans.rot_y" title="Link to this definition"></a></dt>
+<dd><p>Rotation matrix around y axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>[</em><em>radians</em><em>]</em>) – angle to rotate around the y axis</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(numpy.array) [3float x 3float] Rotation matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans.rot_z">
+<span class="sig-name descname"><span class="pre">rot_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans.rot_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans.rot_z" title="Link to this definition"></a></dt>
+<dd><p>Rotation matrix around z axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>[</em><em>radians</em><em>]</em>) – angle to rotate around the z axis</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>(numpy.array) [3float x 3float] Rotation matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vmol.tools.transformer.AtomicTrans.xy_alignment">
+<span class="sig-name descname"><span class="pre">xy_alignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Atoms</span></span></span><a class="reference internal" href="../../_modules/vmol/tools/transformer.html#AtomicTrans.xy_alignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#vmol.tools.transformer.AtomicTrans.xy_alignment" title="Link to this definition"></a></dt>
+<dd><p>Transform the positions of the atoms such that the atoms of indexes1
+and index2 are aligned in the x axis. The atom with index3 would be in
+the xy plane in case to be given.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index2</strong> (<em>index1 and</em>) – indexes of the atoms to be aligned with the x-axis. The positive
+direction of x would go from atom 1 to atom 2.</p></li>
+<li><p><strong>3</strong> (<em>index</em>) – The atom with index 3 would be in the xy plane in case to be given.</p></li>
+<li><p><strong>Center</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – It must be index1 or index2, that means the atom with this index
+will be placed in the origin. In case center=None (default), the
+origin would be in the geometrical center between atoms with index1
+and index2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>changes the positions of the internal atoms object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(numpy.array)[#natoms x 3float] new xyz positions of the N atoms. It</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dofs.html" class="btn btn-neutral float-left" title="dofs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../view.html" class="btn btn-neutral float-right" title="view" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Daniel Sucerquia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
