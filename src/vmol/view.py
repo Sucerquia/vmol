@@ -6,7 +6,7 @@ from vpython import vector
 import vpython as vp
 import numpy as np
 
-# removes the canvas by default and allows to create a new
+# hides the canvas by default and allows to create a new
 # scene when a new MolView is created
 vp.scene.delete()
 
@@ -74,7 +74,7 @@ class VMolecule(AtomicTrans):
         # (check vpython.baseObj.delete,
         # then I just keep them invisible, in case to reload,
         # just change to visibles dofs
-        self.removed_dofs = {}
+        self.hidden_objs = {}
         self.add_atoms(radius=radius)
         # vpython such that the user can use vpython commands as well
         self.master = vp
@@ -122,7 +122,7 @@ class VMolecule(AtomicTrans):
     def setting_canvas(self, **kwargs) -> vp.canvas:
         """Setting vpython scene.
 
-        **kwargs: vpython.canvas attibutes
+        \*\*kwargs: vpython.canvas attibutes
         """
         scene = self.update_obj(self.scene, **kwargs)
         return scene
@@ -208,6 +208,36 @@ class VMolecule(AtomicTrans):
             sphere.index = i + 1
             self.vatoms.append(sphere)
 
+    def hide_atom(self, atomindex: int) -> vp.sphere:
+        """Hide one atom in the scene.
+
+        Parameters
+        ==========
+        atomindex: int
+            Index of the atom to be hidden.
+
+        Returns
+        =======
+        (vpython.sphere) hidden vpython atom
+        """
+        self.vatoms[atomindex].visible = False
+        return self.vatoms[atomindex]
+
+    def show_atom(self, atomindex: int) -> vp.sphere:
+        """Show one atom in the scene.
+
+        Parameters
+        ==========
+        atomindex: int
+            Index of the atom to be shown.
+
+        Returns
+        =======
+        (vpython.sphere) hidden vpython atom
+        """
+        self.vatoms[atomindex].visible = True
+        return self.vatoms[atomindex]
+
     def update_atom(self, index: int, **kwargs) -> vp.sphere:
         """Update atom properties
 
@@ -222,7 +252,7 @@ class VMolecule(AtomicTrans):
         (vpython.sphere) sphere representing the atom
         """
         atom = self.update_obj(self.vatoms[index], **kwargs)
-        # TODO: remove next block
+        # TODO: hide next block
         """ === Deprecated ===
         for attr, val in kwargs.items():
             # The next conditional assumes that none of the vpyhon
@@ -238,7 +268,7 @@ class VMolecule(AtomicTrans):
 
     # region 2_DOFs_1_bonds
     def add_bond(self, atom1index: int, atom2index: int,
-                 color: vector = None, radius: float = 0.2) -> vp.cylinder:
+                 color: vector = None, radius: float = 0.1) -> vp.cylinder:
         """Add a bond between two atoms:
         atom1 and atom2
 
@@ -277,11 +307,11 @@ class VMolecule(AtomicTrans):
                             radius=radius,
                             color=color)
             return self.dofs[name]
-        # If it was previously removed. It means it is there but it is
+        # If it was previously hidden. It means it is there but it is
         # invisible.
-        elif name in self.removed_dofs.keys():
-            self.dofs[name] = self.removed_dofs[name]
-            del self.removed_dofs[name]
+        elif name in self.hidden_objs.keys():
+            self.dofs[name] = self.hidden_objs[name]
+            del self.hidden_objs[name]
             self.update_obj(self.dofs[name],
                             pos=bond_extreme,
                             axis=bond_axis,
@@ -319,7 +349,7 @@ class VMolecule(AtomicTrans):
         colors: list of color lists. Default all gray([0.5, 0.5, 0.5])
             RGB triplets for each of the bonds. It can be one a triplet
             in case of just one color in all bonds.
-        radii: float or list of floats. Default 0.1
+        radius: float or list of floats. Default 0.1
             radius of each bond.
 
         Returns
@@ -351,15 +381,15 @@ class VMolecule(AtomicTrans):
                           radii[i])
         return self.dofs
 
-    def remove_bond(self, atom1index: int, atom2index: int) -> dict:
-        """Remove one bond between two atoms:
+    def hide_bond(self, atom1index: int, atom2index: int) -> dict:
+        """Hide one bond between two atoms:
         atoms1 and atoms2.
 
         Parameters
         ==========
         atom1index (and atom2index): int
             Indexes of the atoms that are connected. This bond
-            will be hiden.
+            will be hidden.
 
         Returns
         =======
@@ -371,64 +401,68 @@ class VMolecule(AtomicTrans):
         name = ''.join(str(i).zfill(3) for i in indexes)
         if name in self.dofs.keys():
             self.dofs[name].visible = False
-            self.removed_dofs[name] = self.dofs[name]
+            self.hidden_objs[name] = self.dofs[name]
             del self.dofs[name]
         return self.dofs
 
-    def remove_bonds(self, atoms1indexes: int = None,
+    def hide_bonds(self, atoms1indexes: int = None,
                      atoms2indexes: int = None) -> dict:
-        """Remove several bonds in the plot between two list of atoms:
+        """Hide several bonds in the plot between two list of atoms:
         atoms1 and atoms2.
 
         Parameters
         ==========
         atom1index (and atom2index): list[int]
             Indexes of the atoms that are connected. If None atom index is
-            defined, all the bonds are removed. If only one atom index is
-            defined, all the bonds with that atom will removed.
+            defined, all the bonds are hidden. If only one atom index is
+            defined, all the bonds with that atom will hidden.
 
         Returns
         =======
-        (dict) all removed DOFs in the system. keys -> dof names,
+        (dict) all hidden DOFs in the system. keys -> dof names,
         values -> vpython.objects
 
-        Note: if atoms2 is None, all bonds with atoms1 will me removed.
+        Note: if atoms2 is None, all bonds with atoms1 will me hidden.
         If atoms1 and atoms2 are None, all bonds in the structure are
-        removed.
+        hidden.
         """
 
         if (atoms1indexes is None) and (atoms2indexes is None):
+            todel = []
             for name in self.dofs.keys():
                 if len(name) == 6:
                     self.dofs[name].visible = False
-                    self.removed_dofs[name] = self.dofs[name]
-                    del self.dofs[name]
-            return self.removed_dofs
+                    self.hidden_objs[name] = self.dofs[name]
+                    todel.append(name)
+            for name in todel:
+                del self.dofs[name]
+
+            return self.hidden_objs
 
         elif (atoms1indexes is not None) and (atoms2indexes is None):
             for name in self.dofs.keys():
                 for index in atoms1indexes:
                     if (str(index).zfill(3) in name) and (len(name) == 6):
                         self.dofs[name].visible = False
-                        self.removed_dofs[name] = self.dofs[name]
+                        self.hidden_objs[name] = self.dofs[name]
                         del self.dofs[name]
-            return self.removed_dofs
+            return self.hidden_objs
 
         else:
             assert len(atoms1indexes) == len(atoms2indexes), \
                 "The number of atoms in both lists must be the same"
             for index1, index2 in zip(atoms1indexes, atoms2indexes):
-                self.remove_bond(index1, index2)
-            return self.removed_dofs
+                self.hide_bond(index1, index2)
+            return self.hidden_objs
 
-    def remove_all_bonds(self):
-        """Remove all bonds
+    def hide_all_bonds(self):
+        """Hide all bonds
 
         Returns
         =======
-        (dict) all removed DOFs in the system. keys -> dof names,
+        (dict) all hidden DOFs in the system. keys -> dof names,
         values -> vpython.objects"""
-        return self.remove_bonds()
+        return self.hide_bonds()
     # endregion
 
     # region 2_DOFs_2_angles
@@ -461,7 +495,7 @@ class VMolecule(AtomicTrans):
         if color is None:
             color = vp.vector(0.5, 0.5, 0.5)
         color = self._asvector(color)
-        # TODO: remove next block
+        # TODO: hide next block
         # if self.is_trajectory:
         #    atoms = self.atoms[self.viewer.view.frame]
 
@@ -481,16 +515,16 @@ class VMolecule(AtomicTrans):
                                             b=side2,
                                             color=color)
             return self.dofs[name]
-        # If it was previously removed. It means it is there but it is
+        # If it was previously hidden. It means it is there but it is
         # invisible.
-        elif name in self.removed_dofs.keys():
-            self.dofs[name] = self.removed_dofs[name]
+        elif name in self.hidden_objs.keys():
+            self.dofs[name] = self.hidden_objs[name]
             self.dofs[name].update_vertexes(origin=vertex,
                                             a=side1,
                                             b=side2,
                                             color=color)
             self.dofs[name].show()
-            del self.removed_dofs[name]
+            del self.hidden_objs[name]
             return self.dofs[name]
 
         # In case it was not created previously:
@@ -504,17 +538,17 @@ class VMolecule(AtomicTrans):
 
         return self.dofs[name]
 
-    def remove_angle(self, atom1index: int,
+    def hide_angle(self, atom1index: int,
                      atom2index: int,
                      atom3index: int) -> dict:
-        """Remove one angle between three atoms:
+        """Hide one angle between three atoms:
         atoms1, atoms2 and atom3.
 
         Parameters
         ==========
         atom1index atom2index and atom3index: int
             Indexes of the atoms that are connected. This bond
-            will be hiden.
+            will be hidden.
 
         Returns
         =======
@@ -528,12 +562,12 @@ class VMolecule(AtomicTrans):
 
         if name in self.dofs.keys():
             self.dofs[name].hide()
-            self.removed_dofs[name] = self.dofs[name]
+            self.hidden_objs[name] = self.dofs[name]
             del self.dofs[name]
-        return self.removed_dofs
+        return self.hidden_objs
 
-    def remove_all_angles(self):
-        """Remove all the angles in the scene
+    def hide_all_angles(self):
+        """Hide all the angles in the scene
 
         Returns
         =======
@@ -543,9 +577,9 @@ class VMolecule(AtomicTrans):
         for dof in self.dofs.keys():
             if len(dof) == 9:
                 self.dofs[dof].hide()
-                self.removed_dofs[dof] = self.dofs[dof]
+                self.hidden_objs[dof] = self.dofs[dof]
                 del self.dofs[dof]
-        return self.removed_dofs
+        return self.hidden_objs
     # endregion
 
     # region 2_DOFs_3_dihedrals
@@ -555,13 +589,12 @@ class VMolecule(AtomicTrans):
                      color: list = None,
                      n: int = 20,
                      factor: float = 0.7) -> VisualAngle:
-        """Add an dihedral angle between four atoms:
+        """Add a dihedral angle between four atoms:
         atom1, atom2, atom3 and atom4
         - with the vertex in the midle of the atom 2 and 3
 
         Parameters
         ==========
-
         atom1index, atom2index, atom3index and atom4index: int
             Indexes of the three atoms that defines the angle.
         color: color list
@@ -608,16 +641,16 @@ class VMolecule(AtomicTrans):
                                             b=side2,
                                             color=color)
             return self.dofs[name]
-        # If it was previously removed. It means it is still there but it is
+        # If it was previously hidden. It means it is still there but it is
         # invisible.
-        elif name in self.removed_dofs.keys():
-            self.dofs[name] = self.removed_dofs[name]
+        elif name in self.hidden_objs.keys():
+            self.dofs[name] = self.hidden_objs[name]
             self.dofs[name].update_vertexes(origin=vertex,
                                             a=side1,
                                             b=side2,
                                             color=color)
             self.dofs[name].show()
-            del self.removed_dofs[name]
+            del self.hidden_objs[name]
             return self.dofs[name]
 
         # In case it was not created previously:
@@ -630,16 +663,16 @@ class VMolecule(AtomicTrans):
                                             atom3index, atom4index])
         return self.dofs[name]
 
-    def remove_dihedral(self, atom1index: int, atom2index: int,
+    def hide_dihedral(self, atom1index: int, atom2index: int,
                         atom3index: int, atom4index: int):
-        """Remove one dihedral angle defined by three atoms:
+        """Hide one dihedral angle defined by three atoms:
         atoms1, atoms2 and atom3.
 
         Parameters
         ==========
         atom1index atom2index and atom3index: int
             Indexes of the atoms that are connected. This bond
-            will be hiden.
+            will be hidden.
 
         Returns
         =======
@@ -653,12 +686,12 @@ class VMolecule(AtomicTrans):
 
         if name in self.dofs.keys():
             self.dofs[name].hide()
-            self.removed_dofs[name] = self.dofs[name]
+            self.hidden_objs[name] = self.dofs[name]
             del self.dofs[name]
-        return self.removed_dofs
+        return self.hidden_objs
 
-    def remove_all_dihedrals(self):
-        """Remove all the dihedrals in the scene
+    def hide_all_dihedrals(self):
+        """Hide all the dihedrals in the scene
 
         Returns
         =======
@@ -668,9 +701,9 @@ class VMolecule(AtomicTrans):
         for dof in self.dofs.keys():
             if len(dof) == 12:
                 self.dofs[dof].hide()
-                self.removed_dofs[dof] = self.dofs[dof]
+                self.hidden_objs[dof] = self.dofs[dof]
                 del self.dofs[dof]
-        return self.removed_dofs
+        return self.hidden_objs
     # endregion
 
     # region 2_DOFs_4_arbitrary
