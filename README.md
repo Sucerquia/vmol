@@ -17,3 +17,4 @@ arrows or text.
 # Ideas to implement
 - Use the same technique that angles to create surfaces. One possible use is
 to represent electronic density surfaces.
+- Add automatic guessing of bonds with ASE.

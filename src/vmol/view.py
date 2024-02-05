@@ -252,7 +252,7 @@ class VMolecule(AtomicTrans):
         (vpython.sphere) sphere representing the atom
         """
         atom = self.update_obj(self.vatoms[index], **kwargs)
-        # TODO: hide next block
+        # TODO: remove next block
         """ === Deprecated ===
         for attr, val in kwargs.items():
             # The next conditional assumes that none of the vpyhon
