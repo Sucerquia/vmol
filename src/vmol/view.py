@@ -3,8 +3,9 @@ from ase.data.colors import jmol_colors
 from vmol.tools.transformer import AtomicTrans
 from vmol.tools.dofs import VisualAngle
 from vpython import vector
-import vpython as vp
+import vmol.vpython_with_img as vp
 import numpy as np
+from IPython.display import clear_output
 
 # hides the canvas by default and allows to create a new
 # scene when a new MolView is created
@@ -45,6 +46,7 @@ class VMolecule(AtomicTrans):
         self.vp = vp
 
         # next line imports the creates
+        clear_output()
         self.scene = vp.canvas(**kwargs)
 
         # atoms and trajectory
@@ -77,7 +79,6 @@ class VMolecule(AtomicTrans):
         self.hidden_objs = {}
         self.add_atoms(radius=radius)
         # vpython such that the user can use vpython commands as well
-        self.master = vp
 
     # region 1_vpython-tools
     def _asvector(self, arraylike) -> vector:
