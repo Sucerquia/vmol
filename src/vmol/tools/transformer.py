@@ -166,10 +166,10 @@ class AtomicTrans:
         """
         # center
         if center == index1 or center == index2:
-            center = self.atoms[center].position
+            center = atoms[center].position
         else:
-            pos1 = self.atoms[index1].position
-            pos2 = self.atoms[index2].position
+            pos1 = atoms[index1].position
+            pos2 = atoms[index2].position
             center = (pos1 + pos2) / 2
 
         atoms.set_positions(atoms.positions - center)
