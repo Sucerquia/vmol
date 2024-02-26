@@ -59,18 +59,22 @@ class canvas(baseObj):
                 portion = 80
 
             from IPython.display import display, HTML, Javascript
-
-            display(HTML('<body>'
-                         f'<div style="width: 100%; height: {height}px;">'
-                         f'<div style="width: {portion}%;" id="glowscript" class="glowscript"></div>'
-                         f'<div style="float: right; width: {100-portion}%;"> '
-                         f'<img src="{img}"'
-                         'style="object-fit:fill;'
-                         f'height:{height}px;"/>'
-                         ' </div>'
-                         '</div>'
-                         '</body>'))
-            display(Javascript("""if (typeof Jupyter !== "undefined") { window.__context = { glowscript_container: $("#glowscript").removeAttr("id")};}else{ element.textContent = ' ';}"""))
+            
+            if img != '':
+                display(HTML('<body>'
+                            f'<div style="width: 100%; height: {height}px;">'
+                            f'<div style="width: {portion}%;" id="glowscript" class="glowscript"></div>'
+                            f'<div style="float: right; width: {100-portion}%;"> '
+                            f'<img src="{img}"'
+                            'style="object-fit:fill;'
+                            f'height:{height}px;"/>'
+                            ' </div>'
+                            '</div>'
+                            '</body>'))
+                display(Javascript("""if (typeof Jupyter !== "undefined") { window.__context = { glowscript_container: $("#glowscript").removeAttr("id")};}else{ element.textContent = ' ';}"""))
+            else:    
+                display(HTML("""<div id="glowscript" class="glowscript"></div>"""))
+                display(Javascript("""if (typeof Jupyter !== "undefined") { window.__context = { glowscript_container: $("#glowscript").removeAttr("id")};}else{ element.textContent = ' ';}"""))
 
         super(canvas, self).__init__()   ## get idx, attrsupdt
 
