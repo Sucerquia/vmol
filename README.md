@@ -4,7 +4,7 @@ Created by Daniel Sucerquia, PhD student at HITS, 2024. (X: @sucer6)
 
 Visualization package for molecules. It contains tools to build atoms and bonds
 very easy to manipulate. This package is wrap of
-[Vpython](https://vpython.org/) for Molecules visualization. That allows to to
+[Vpython](https://vpython.org/) for visualizationof molecules. This wrap allows to
 add and use all the functions and tools of Vpython, e.g. adding objects as
 arrows or text.
 
