@@ -1,5 +1,5 @@
 # VMol
-## Vpython wrap for molecule visualization
+## Vpython wrap for visualization of molecules
 Created by Daniel Sucerquia, PhD student at HITS, 2024. (X: @sucer6)
 
 Visualization package for molecules. It contains tools to build atoms and bonds
