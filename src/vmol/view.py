@@ -531,7 +531,7 @@ class VMolecule(AtomicTrans):
         # In case it was not created previously:
         self.dofs[name] = VisualAngle(side1, side2, n,
                                       origin=vertex, color=color,
-                                      scene=self.scene,
+                                      canvas=self.scene,
                                       factor=factor)
 
         self.dofs[name].indices = np.array([atom1index, atom2index,
@@ -658,7 +658,7 @@ class VMolecule(AtomicTrans):
         self.dofs[name] = VisualAngle(side1, side2, n,
                                       origin=vertex,
                                       color=color,
-                                      scene=self.scene,
+                                      canvas=self.scene,
                                       factor=factor)
         self.dofs[name].indices = np.array([atom1index, atom2index,
                                             atom3index, atom4index])

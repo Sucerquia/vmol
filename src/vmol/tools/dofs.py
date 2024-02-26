@@ -1,4 +1,4 @@
-import vpython as vp
+import vmol.vpython_with_img as vp
 
 
 class VisualAngle:
@@ -7,7 +7,7 @@ class VisualAngle:
     created.
     """
     def __init__(self, a: list, b: list, n: int,
-                 origin: list = None, scene: vp.canvas = None,
+                 origin: list = None, canvas: vp.canvas = None,
                  color: list = None, factor: float = 1):
         """
         Parameters
@@ -18,7 +18,9 @@ class VisualAngle:
             vector side of the angle.
         n: int
             number of intermedia triangles to define the arc.
-        scene: vpython.canvas
+        origin: list
+            position of the vertex of the angle.
+        canvas: vpython.canvas
             vpython scene to be added.
         color: list
             RGB color of the arc.
@@ -33,7 +35,8 @@ class VisualAngle:
         self.n = n + 1
         self.factor = factor
         self.vertexes = [vp.vertex(pos=vp.vector(0, 0, 0),
-                                   color=self.color) for _ in range(self.n)]
+                                   color=self.color,
+                                   canvas=canvas) for _ in range(self.n)]
 
         a = self._asvector(a)
         b = self._asvector(b)
@@ -41,7 +44,8 @@ class VisualAngle:
             origin = vp.vector(0, 0, 0)
 
         self.origin = vp.vertex(pos=self._asvector(origin),
-                                color=self.color)
+                                color=self.color,
+                                canvas=canvas)
         self.update_vertexes(self.origin.pos, a, b)
 
         self.triangles = []
@@ -50,7 +54,7 @@ class VisualAngle:
                                               v1=self.vertexes[i],
                                               v2=self.vertexes[i + 1],
                                               color=self.color,
-                                              canvas=scene))
+                                              canvas=canvas))
 
     def _asvector(self, arraylike):
         """Changes an array to a vpython vector
