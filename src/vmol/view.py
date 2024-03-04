@@ -43,11 +43,13 @@ class VMolecule(AtomicTrans):
         if 'background' in kwargs.keys():
             kwargs['background'] = self._asvector(kwargs['background'])
 
+        # vpython such that the user can use vpython commands as well
         self.vp = vp
 
         # next line imports the creates
         clear_output()
         self.scene = vp.canvas(**kwargs)
+        self.create_caption()
 
         # atoms and trajectory
         self.frame = frame
@@ -78,7 +80,6 @@ class VMolecule(AtomicTrans):
         # just change to visibles dofs
         self.hidden_objs = {}
         self.add_atoms(radius=radius)
-        # vpython such that the user can use vpython commands as well
 
     # region 1_vpython-tools
     def _asvector(self, arraylike) -> vector:
@@ -127,6 +128,22 @@ class VMolecule(AtomicTrans):
         """
         scene = self.update_obj(self.scene, **kwargs)
         return scene
+    
+    def create_caption(self):
+
+        # Note: when this function fails, does not return any message. Just
+        # wtext stop working. cchanges texts and creating new ones.
+        self.caption = vp.wtext(text='', canvas=self.scene)
+        def identify():
+            at = self.scene.mouse.pick
+            if at is not None and hasattr(at, 'index'):
+                self.caption.text = str(self.vatoms[at.index - 1].info)
+                self.caption.text = self.caption.text.replace(',', '\n')
+                self.caption.text = self.caption.text.replace('{', ' ')
+                self.caption.text = self.caption.text.replace('}', '')
+            else:
+                self.caption.text = ''
+        self.scene.bind('click', identify)
 
     def show_axis(self, show: bool = True,
                   size: float = 1.0,
@@ -207,6 +224,12 @@ class VMolecule(AtomicTrans):
                                canvas=self.scene,
                                radius=radius)
             sphere.index = i + 1
+            sphere.info = {'Index': i + 1,
+                           'Atom': atom.symbol,
+                           'Pos_x': atom.x,
+                           'Pos_y': atom.y,
+                           'Pos_z': atom.z,
+                           'Charge': atom.charge}
             self.vatoms.append(sphere)
 
     def hide_atom(self, atomindex: int) -> vp.sphere:
