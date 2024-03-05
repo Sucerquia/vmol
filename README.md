@@ -11,6 +11,15 @@ arrows or text.
 # Requirements
 - [Vpython](https://vpython.org/presentation2018/install.html)
 
+# Installation
+
+```console
+$ git clone git@github.com:Sucerquia/vmol.git
+$ cd vmol
+$ pip install .
+```
+
+
 # Tutorials
 - Tutorial about the basic functions can be found in [this file](https://github.com/Sucerquia/vmol/blob/main/examples/basic_visualization.ipynb)
 
