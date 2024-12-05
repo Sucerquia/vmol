@@ -57,7 +57,7 @@ class VMolecule(AtomicTrans):
             if alignment is not None:
                 index1, index2, index3 = alignment
                 atoms = self.xy_alignment(atoms, index1, index2, index3)
-            self.trajectory = [atoms.copy()]
+            self.trajectory = [atoms]
             self.frame = 0
         else:
             assert isinstance(atoms[0], Atoms), "atoms must be an ase.Atoms" +\
@@ -70,6 +70,7 @@ class VMolecule(AtomicTrans):
 
         self.atoms = self.trajectory[self.frame]
         self.axis = None
+        self.selected = None
         self.show_axis(show=show_axis)
         self.color_scheme = color_scheme
         self.vatoms = []
@@ -137,11 +138,13 @@ class VMolecule(AtomicTrans):
         def identify():
             at = self.scene.mouse.pick
             if at is not None and hasattr(at, 'index'):
+                self.selected = at
                 self.caption.text = str(self.vatoms[at.index - 1].info)
                 self.caption.text = self.caption.text.replace(',', '\n')
                 self.caption.text = self.caption.text.replace('{', ' ')
                 self.caption.text = self.caption.text.replace('}', '')
             else:
+                self.selected = None
                 self.caption.text = ''
         self.scene.bind('click', identify)
 
@@ -778,6 +781,39 @@ class VMolecule(AtomicTrans):
             raise TypeError(f"{dof} is not an accepted degree of freedom.")
     # endregion
 
+    def seen_atoms(self):
+        """
+        Return an ase.Atoms object with the atoms that are displayed.
+        """
+        subset = []
+        for i, atom in enumerate(self.vatoms):
+            if atom.visible:
+                subset.append(i)
+
+        return self.atoms[subset]
+    
+    def transform(self, trans, *args, **kwargs):
+        """
+        Applyes a transformation to all the atoms in the trajectory.
+
+        Parameters
+        ==========
+        trans: str
+           name of the transformation you want to apply. For more information,
+           visit vmol.tools.transformer
+        *args and **kwargs of the transformation function.
+
+        Return
+        ======
+        (list or Atoms) set of images in the trajectory. when there is only one
+        structure, the return is a list with only one object.
+        """
+        for atoms in self.trajectory:
+            getattr(self, trans)(atoms, *args, **kwargs)
+        self.update_frame(self.frame)
+
+        return self.trajectory
+
     # region update_frame
     def update_frame(self, frame):
         self.frame = frame
@@ -785,6 +821,10 @@ class VMolecule(AtomicTrans):
 
         for i, atom in enumerate(self.vatoms):
             atom.pos = vp.vector(*self.atoms[i].position)
+            atom.info['Pos_x'] = atom.pos.x
+            atom.info['Pos_y'] = atom.pos.y
+            atom.info['Pos_z'] = atom.pos.z
+                           
         for dof in self.dofs.values():
             self.add_dof(dof.indices)
         return frame
