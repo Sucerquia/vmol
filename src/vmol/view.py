@@ -817,6 +817,9 @@ class VMolecule(AtomicTrans):
         subset = []
         for i, atom in enumerate(self.vatoms):
             if atom.visible:
+                self.atoms[i].position = [self.vatoms[i].pos.x,
+                                          self.vatoms[i].pos.y,
+                                          self.vatoms[i].pos.z]
                 subset.append(i)
 
         return self.atoms[subset]
