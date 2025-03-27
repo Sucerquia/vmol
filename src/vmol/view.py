@@ -6,6 +6,7 @@ from vpython import vector
 import vmol.vpython_with_img as vp
 import numpy as np
 from IPython.display import clear_output
+from ase.geometry.analysis import Analysis
 
 # hides the canvas by default and allows to create a new
 # scene when a new MolView is created
@@ -20,6 +21,7 @@ class VMolecule(AtomicTrans):
                  alignment: list = None,
                  frame=0,
                  radius=0.2,
+                 default_bonds=False,
                  **kwargs) -> None:
         """
         Parameters
@@ -81,6 +83,9 @@ class VMolecule(AtomicTrans):
         # just change to visibles dofs
         self.hidden_objs = {}
         self.add_atoms(radius=radius)
+        
+        if default_bonds:
+            self.add_def_bonds(self.atoms)
 
     # region 1_vpython-tools
     def _asvector(self, arraylike) -> vector:
@@ -235,6 +240,29 @@ class VMolecule(AtomicTrans):
                            'Charge': atom.charge}
             self.vatoms.append(sphere)
 
+    def add_def_bonds(self, atoms):
+        """
+        Add the default bounds predicted by ASE.
+
+        Parameters
+        ==========
+        atoms: ase.Atoms
+            atoms to be connected by default bonds.
+        
+        Returns
+        =======
+        (dict) all the DOFs in the system. keys -> dof names,
+        values -> vpython.objects
+        """
+        ana = Analysis(atoms)
+        bonds1 = []
+        bonds2 = []
+        for i, contact in enumerate(ana.unique_bonds[0]):
+            for j in contact:
+                bonds1.append(i + 1)
+                bonds2.append(j + 1)
+        self.add_bonds(bonds1, bonds2)
+
     def hide_atom(self, atomindex: int) -> vp.sphere:
         """Hide one atom in the scene.
 
@@ -364,7 +392,8 @@ class VMolecule(AtomicTrans):
                   atoms2indexes: list,
                   colors: list = None,
                   radii: float = 0.07) -> dict:
-        """Add a bond between each pair of atoms corresponding to
+        """
+        Add a bond between each pair of atoms corresponding to
         two lists of atoms:
         atoms1 and atoms.
 

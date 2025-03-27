@@ -106,7 +106,8 @@ class AtomicTrans:
                     trans: np.ndarray,
                     shift: np.ndarray = None,
                     indexes: list = None) -> np.ndarray:
-        """Apply a transformation to all vector positions of the atoms object
+        """
+        Apply a transformation to all vector positions of the atoms object
 
         Parameters
         ==========
@@ -134,7 +135,7 @@ class AtomicTrans:
             if i in indexes:
                 new_positions.append(np.dot(trans, atom.position) + shift)
             else:
-                new_positions.append(atom.position + shift)
+                new_positions.append(atom.position)
         atoms.set_positions(new_positions)
 
         return new_positions
