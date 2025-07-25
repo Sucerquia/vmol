@@ -34,7 +34,8 @@ class VMolecule(AtomicTrans):
             True to show xyz axis. Default = False
         alignment: list[int]
             list of three indexes corresponding to the indexes of the atoms in
-            the xy plane. The first two atoms are set on the x axis.
+            the xy plane. 1-based indexing. The first two atoms are set on the
+            x axis.
         frame: int
             In case to be a trajectory, the index of the captured frame. In
             case of being a single point configuration, frame is always 0.
@@ -269,14 +270,14 @@ class VMolecule(AtomicTrans):
         Parameters
         ==========
         atomindex: int
-            Index of the atom to be hidden.
+            Index of the atom to be hidden. 1-based indexing.
 
         Returns
         =======
         (vpython.sphere) hidden vpython atom
         """
-        self.vatoms[atomindex].visible = False
-        return self.vatoms[atomindex]
+        self.vatoms[atomindex - 1].visible = False
+        return self.vatoms[atomindex - 1]
 
     def show_atom(self, atomindex: int) -> vp.sphere:
         """Show one atom in the scene.
@@ -284,14 +285,14 @@ class VMolecule(AtomicTrans):
         Parameters
         ==========
         atomindex: int
-            Index of the atom to be shown.
+            Index of the atom to be shown. 1-based indexing.
 
         Returns
         =======
         (vpython.sphere) hidden vpython atom
         """
-        self.vatoms[atomindex].visible = True
-        return self.vatoms[atomindex]
+        self.vatoms[atomindex - 1].visible = True
+        return self.vatoms[atomindex - 1]
 
     def update_atom(self, index: int, **kwargs) -> vp.sphere:
         """Update atom properties
@@ -299,14 +300,14 @@ class VMolecule(AtomicTrans):
         Parameters
         ==========
         index: int
-            index of the atom to be modified.
+            index of the atom to be modified. 1-based indexing.
         **kwargs: arguments to be modified
 
         Returns
         =======
         (vpython.sphere) sphere representing the atom
         """
-        atom = self.update_obj(self.vatoms[index], **kwargs)
+        atom = self.update_obj(self.vatoms[index - 1], **kwargs)
         # TODO: remove next block
         """ === Deprecated ===
         for attr, val in kwargs.items():
@@ -324,13 +325,15 @@ class VMolecule(AtomicTrans):
     # region 2_DOFs_1_bonds
     def add_bond(self, atom1index: int, atom2index: int,
                  color: vector = None, radius: float = 0.1) -> vp.cylinder:
-        """Add a bond between two atoms:
-        atom1 and atom2
+        """
+        Add a bond between two atoms.
 
         Parameters
         ==========
-        atom1index (and atom2index): int
-            Indexes of the atoms to be connected according with g09 convention.
+        atom1index: int
+            Index of atom to be connected. 1-based indexing.
+        atom2index: int
+            Index of atom to be connected. 1-based indexing.
         color: list. Default gray([0.5, 0.5, 0.5])
             RGB triplet.
         radius: float. Default 0.1
@@ -393,19 +396,19 @@ class VMolecule(AtomicTrans):
                   colors: list = None,
                   radii: float = 0.07) -> dict:
         """
-        Add a bond between each pair of atoms corresponding to
-        two lists of atoms:
-        atoms1 and atoms.
+        Add a bond between each pair of atoms corresponding to the ordered
+        elements two lists of atoms.
 
         Parameters
         ==========
-        atom1index (and atom2index): list[int]
-            Indexes of the atoms to be connected according with g09
-            convention.
-        colors: list of color lists. Default all gray([0.5, 0.5, 0.5])
+        atoms1indexes: list[int]
+            Indexes of the atoms to be connected. 1-based indexing.
+        atoms1indexes: list[int]
+            Indexes of the atoms to be connected. 1-based indexing.
+        colors: color-lists. Default=[0.5, 0.5, 0.5]
             RGB triplets for each of the bonds. It can be one a triplet
             in case of just one color in all bonds.
-        radius: float or list of floats. Default 0.1
+        radius: float or list of floats. Default=0.1
             radius of each bond.
 
         Returns
@@ -424,7 +427,8 @@ class VMolecule(AtomicTrans):
             radii = [radii] * len(atoms1indexes)
 
         assert len(atoms1indexes) == len(atoms2indexes), \
-            "The number of atoms in both lists must be the same"
+            "The two lists defining the bonds have to have the same " + \
+            "number of indexes"
         assert len(atoms1indexes) == len(colors), \
             "The number of colors in must be the same as the number of atoms"
         assert len(atoms1indexes) == len(radii), \
@@ -443,9 +447,12 @@ class VMolecule(AtomicTrans):
 
         Parameters
         ==========
-        atom1index (and atom2index): int
-            Indexes of the atoms that are connected. This bond
-            will be hidden.
+        atom1: int
+            Index of one of the atoms that are connected. This bond will be
+            hidden. 1-based indexing.
+        atom2: int
+            Index of one of the atoms that are connected. This bond will be
+            hidden. 1-based indexing.
 
         Returns
         =======
@@ -468,10 +475,10 @@ class VMolecule(AtomicTrans):
 
         Parameters
         ==========
-        atom1index (and atom2index): list[int]
-            Indexes of the atoms that are connected. If None atom index is
-            defined, all the bonds are hidden. If only one atom index is
-            defined, all the bonds with that atom will hidden.
+        atoms1indexes: list[int]
+            Indexes of the atoms that are connected. 1-based indexing.
+        atoms2indexes: list[int]
+            Indexes of the atoms that are connected. 1-based indexing.
 
         Returns
         =======
@@ -528,14 +535,16 @@ class VMolecule(AtomicTrans):
                   color: list = None,
                   n: int = 20,
                   factor: float = 0.7) -> dict:
-        """Add an angle to between three atoms:
-        atom1, atom2 and atom3
-        - with the vertex in the atom2
+        """Add an angle to between three atoms with the vertex in the atom2.
 
         Parameters
         ==========
-        atom1index, atom2index and atom3index: int
-            Indexes of the three atoms that defines the angle.
+        atom1index: int
+            Index of the first atom that defines the angle. 1-based indexing.
+        atom2index: int
+            Index of the second atom that defines the angle. 1-based indexing.
+        atom3index: int
+            Index of the third atom that defines the angle. 1-based indexing.
         color: color list. Default all gray([0.5, 0.5, 0.5])
             RGB triplet.
         n: int. Default 10
@@ -602,9 +611,12 @@ class VMolecule(AtomicTrans):
 
         Parameters
         ==========
-        atom1index atom2index and atom3index: int
-            Indexes of the atoms that are connected. This bond
-            will be hidden.
+        atom1index: int
+            Index of the first atom that defines the angle. 1-based indexing.
+        atom2index: int
+            Index of the second atom that defines the angle. 1-based indexing.
+        atom3index: int
+            Index of the third atom that defines the angle. 1-based indexing.
 
         Returns
         =======
@@ -645,19 +657,24 @@ class VMolecule(AtomicTrans):
                      color: list = None,
                      n: int = 20,
                      factor: float = 0.7) -> VisualAngle:
-        """Add a dihedral angle between four atoms:
-        atom1, atom2, atom3 and atom4
-        - with the vertex in the midle of the atom 2 and 3
+        """Add a dihedral angle between four atoms with the vertex in the midle
+        of the atom 2 and 3.
 
         Parameters
         ==========
-        atom1index, atom2index, atom3index and atom4index: int
-            Indexes of the three atoms that defines the angle.
+        atom1index: int
+            Index of the first atom that defines the angle. 1-based indexing.
+        atom2index: int
+            Index of the second atom that defines the angle. 1-based indexing.
+        atom3index: int
+            Index of the third atom that defines the angle. 1-based indexing.
+        atom4index: int
+            Index of the fourth atom that defines the angle. 1-based indexing.
         color: color list
             RGB triplet. Default all gray([0.5, 0.5, 0.5])
-        n: int
+        n: int. Default=20
             number of intermedia points to add in the arc of
-            the angle. Default 20
+            the angle.
         factor: float
             factor of the minimim bond lenght to define the size of the arc.
 
@@ -726,9 +743,14 @@ class VMolecule(AtomicTrans):
 
         Parameters
         ==========
-        atom1index atom2index and atom3index: int
-            Indexes of the atoms that are connected. This bond
-            will be hidden.
+        atom1index: int
+            Index of the first atom that defines the angle. 1-based indexing.
+        atom2index: int
+            Index of the second atom that defines the angle. 1-based indexing.
+        atom3index: int
+            Index of the third atom that defines the angle. 1-based indexing.
+        atom4index: int
+            Index of the fourth atom that defines the angle. 1-based indexing.
 
         Returns
         =======
@@ -826,7 +848,7 @@ class VMolecule(AtomicTrans):
     
     def transform(self, trans, *args, **kwargs):
         """
-        Applyes a transformation to all the atoms in the trajectory.
+        Applies a transformation to all the atoms in the trajectory.
 
         Parameters
         ==========
