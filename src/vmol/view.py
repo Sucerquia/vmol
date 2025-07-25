@@ -259,7 +259,7 @@ class VMolecule(AtomicTrans):
                            'Charge': atom.charge}
             self.vatoms.append(sphere)
 
-    def add_def_bonds(self, atoms):
+    def add_def_bonds(self, atoms, engine='ase'):
         """
         Add the default bounds predicted by ASE.
 
@@ -273,10 +273,23 @@ class VMolecule(AtomicTrans):
         (dict) all the DOFs in the system. keys -> dof names,
         values -> vpython.objects
         """
-        ana = Analysis(atoms)
+        if engine == 'ase':
+            ana = Analysis(atoms)
+            unique_contact = ana.unique_bonds[0]
+        elif engine == 'vmd':
+            from ase.io import write
+            from myutils.ase_utils.molecules import vmd_connectivity_unique
+            import os
+
+
+            write('tmp_Mview.xyz', atoms)
+            unique_contact = vmd_connectivity_unique('tmp_Mview.xyz')
+            os.remove('tmp_Mview.xyz')
+
+
         bonds1 = []
         bonds2 = []
-        for i, contact in enumerate(ana.unique_bonds[0]):
+        for i, contact in enumerate(unique_contact):
             for j in contact:
                 bonds1.append(i + 1)
                 bonds2.append(j + 1)
