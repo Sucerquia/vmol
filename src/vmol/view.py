@@ -43,6 +43,7 @@ class VMolecule(AtomicTrans):
             set the size of the atoms. Default = 0.2
         **kwargs of Vpython canvas
         """
+        self._hook = False
         if 'background' in kwargs.keys():
             kwargs['background'] = self._asvector(kwargs['background'])
 
@@ -87,6 +88,23 @@ class VMolecule(AtomicTrans):
         
         if default_bonds:
             self.add_def_bonds(self.atoms)
+
+        self._hook = True
+
+    def __getattribute__(self, name):
+        attr = super().__getattribute__(name)
+        update_frame = super().__getattribute__('update_frame')
+        if callable(attr) and \
+            name != 'update_frame' and \
+            name != '_hook' and \
+            super().__getattribute__('_hook'):
+            def wrapper(*args, **kwargs):
+                outp = attr(*args, **kwargs)
+                update_frame()
+                return outp  # Original method
+            return wrapper
+        else:
+            return attr
 
     # region 1_vpython-tools
     def _asvector(self, arraylike) -> vector:
@@ -869,8 +887,10 @@ class VMolecule(AtomicTrans):
         return self.trajectory
 
     # region update_frame
-    def update_frame(self, frame):
-        self.frame = frame
+    def update_frame(self, frame=None):
+        self._hook = False
+        if frame is not None:
+            self.frame = frame
         self.atoms = self.trajectory[self.frame]
 
         for i, atom in enumerate(self.vatoms):
@@ -881,5 +901,6 @@ class VMolecule(AtomicTrans):
                            
         for dof in self.dofs.values():
             self.add_dof(dof.indices)
+        self._hook = True
         return frame
     # endregion
