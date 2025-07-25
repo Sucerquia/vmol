@@ -118,7 +118,7 @@ class AtomicTrans:
         shift: numpy.array
             translation transformation.
         indexes: list
-            indexes of the atoms to be transformed.
+            indexes of the atoms to be transformed. 1-based indexing.
 
         Returns
         =======
@@ -128,8 +128,9 @@ class AtomicTrans:
         if shift is None:
             shift = [0, 0, 0]
         if indexes is None:
-            indexes = list(range(len(atoms)))
+            indexes = np.arange(len(atoms)) + 1
 
+        indexes = np.array(indexes) - 1
         new_positions = []
         for i, atom in enumerate(atoms):
             if i in indexes:
@@ -144,27 +145,34 @@ class AtomicTrans:
                      index2: int, index3: int = None,
                      center: int = None) -> Atoms:
         """Transform the positions of the atoms such that the atoms of indexes1
-        and index2 are aligned in the x axis. The atom with index3 would be in
-        the xy plane in case to be given.
+        and index2 are aligned in the x axis (in direction 1->2). The atom with
+        index3 would be in the xy plane in case to be given.
 
         Parameters
         ==========
-        index1 and index2: int
-            indexes of the atoms to be aligned with the x-axis. The positive
-            direction of x would go from atom 1 to atom 2.
+        index1: int
+            index of the atoms to be aligned with the x-axis. 1-based indexing.
+        index2: int
+            index of the atoms to be aligned with the x-axis. 1-based indexing.
         index 3: int (optional)
             The atom with index 3 would be in the xy plane in case to be given.
+            1-based indexing.
         Center: int (optional)
             It must be index1 or index2, that means the atom with this index
             will be placed in the origin. In case center=None (default), the
             origin would be in the geometrical center between atoms with index1
-            and index2.
+            and index2. 1-based indexing.
 
         Return
         ======
         (numpy.array)[#natoms x 3float] new xyz positions of the N atoms. It
-            changes the positions of the internal atoms object.
+        changes the positions of the internal atoms object.
         """
+        index1 = index1 - 1 
+        index2 = index2 - 1
+        index3 = index3 - 1
+        center = center - 1
+
         # center
         if center == index1 or center == index2:
             center = atoms[center].position
