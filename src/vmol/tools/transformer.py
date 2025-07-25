@@ -150,7 +150,8 @@ class AtomicTrans:
 
     def xy_alignment(self, atoms: Atoms, index1: int,
                      index2: int, index3: int = None,
-                     center: int = None) -> Atoms:
+                     center: int = None,
+                     **kwargs) -> Atoms:
         """Transform the positions of the atoms such that the atoms of indexes1
         and index2 are aligned in the x axis (in direction 1->2). The atom with
         index3 would be in the xy plane in case to be given.
@@ -187,12 +188,13 @@ class AtomicTrans:
             pos1 = atoms[index1].position
             pos2 = atoms[index2].position
             center = (pos1 + pos2) / 2
-
-        atoms.set_positions(atoms.positions - center)
+        
+        self.apply_trans(atoms, np.identity(3), shift=-center, **kwargs)
+        # atoms.set_positions(atoms.positions - center)
         axis = atoms[index2].position - atoms[index1].position
-        self.apply_trans(atoms, self.align_axis(axis))
+        self.apply_trans(atoms, self.align_axis(axis), **kwargs)
         if index3 is not None:
             third = atoms[index3].position
-            self.apply_trans(atoms, self.align_plane(third))
+            self.apply_trans(atoms, self.align_plane(third), **kwargs)
 
         return atoms
