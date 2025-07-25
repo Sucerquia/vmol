@@ -105,7 +105,8 @@ class AtomicTrans:
     def apply_trans(self, atoms: Atoms,
                     trans: np.ndarray,
                     shift: np.ndarray = None,
-                    indexes: list = None) -> np.ndarray:
+                    indexes: list = None,
+                    exclude: list = None) -> np.ndarray:
         """
         Apply a transformation to all vector positions of the atoms object
 
@@ -119,6 +120,9 @@ class AtomicTrans:
             translation transformation.
         indexes: list
             indexes of the atoms to be transformed. 1-based indexing.
+        exclude: list
+            indexes of the atoms to be excluded of the transformation. 1-based
+            indexing.
 
         Returns
         =======
@@ -129,11 +133,14 @@ class AtomicTrans:
             shift = [0, 0, 0]
         if indexes is None:
             indexes = np.arange(len(atoms)) + 1
+        if exclude is None:
+            exclude = []
 
         indexes = np.array(indexes) - 1
+        exclude = np.array(exclude) - 1
         new_positions = []
         for i, atom in enumerate(atoms):
-            if i in indexes:
+            if i in indexes and i not in exclude:
                 new_positions.append(np.dot(trans, atom.position) + shift)
             else:
                 new_positions.append(atom.position)
