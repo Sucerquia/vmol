@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vmol"
+version = "1.0"
+description = "Molecule Visualization Package that uses VPython"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Daniel Sucerquia", email = "daniel.sucerquia@h-its.org" },
+    { name = "Hits_mbm" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Operating System :: OS Independent"
+]
+requires-python = ">=3.9"
+dependencies = [
+    "ase",
+    "vpython"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["vmol"]
