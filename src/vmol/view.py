@@ -338,18 +338,13 @@ class VMolecule(AtomicTrans):
         =======
         (vpython.sphere) sphere representing the atom
         """
+        self._hook = False
         atom = self.update_obj(self.vatoms[index - 1], **kwargs)
-        # TODO: remove next block
-        """ === Deprecated ===
-        for attr, val in kwargs.items():
-            # The next conditional assumes that none of the vpyhon
-            # objects has lists as parameters.
-            if isinstance(val, (np.ndarray,
-                                list,
-                                tuple)):
-                val = vector(*val)
-            setattr(self.vatoms[index], attr, val)
-        """
+        self.atoms[index - 1].position = [self.vatoms[index - 1].pos.x,
+                                          self.vatoms[index - 1].pos.y,
+                                          self.vatoms[index - 1].pos.z]
+        self._hook = True
+
         return atom
     # endregion
 
