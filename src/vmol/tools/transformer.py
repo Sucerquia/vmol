@@ -178,8 +178,10 @@ class AtomicTrans:
         """
         index1 = index1 - 1 
         index2 = index2 - 1
-        index3 = index3 - 1
-        center = center - 1
+        if index3 is not None:
+             index3 = index3 - 1
+        if center is not None:
+            center = center - 1
 
         # center
         if center == index1 or center == index2:
