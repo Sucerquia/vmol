@@ -360,8 +360,8 @@ class VMolecule(AtomicTrans):
             Index of atom to be connected. 1-based indexing.
         atom2index: int
             Index of atom to be connected. 1-based indexing.
-        color: list. Default gray([0.5, 0.5, 0.5])
-            RGB triplet.
+        color: list. Default=None
+            RGB triplet. If None, it will be gray.
         radius: float. Default 0.1
             Radius of the bond.
 
@@ -373,11 +373,6 @@ class VMolecule(AtomicTrans):
         bond_axis = self.vatoms[atom2index - 1].pos - \
             self.vatoms[atom1index - 1].pos
 
-        if color is None:
-            # TODO: add ball+stick colors as nglview
-            color = vp.vector(0.5, 0.5, 0.5)
-        color = self._asvector(color)
-
         indexes = [atom1index, atom2index]
         if atom1index > atom2index:
             indexes = indexes[::-1]
@@ -385,6 +380,8 @@ class VMolecule(AtomicTrans):
 
         # If already exists
         if name in self.dofs.keys():
+            if color is None:
+                color = self.dofs[name].color
             self.update_obj(self.dofs[name],
                             pos=bond_extreme,
                             axis=bond_axis,
@@ -394,6 +391,8 @@ class VMolecule(AtomicTrans):
         # If it was previously hidden. It means it is there but it is
         # invisible.
         elif name in self.hidden_objs.keys():
+            if color is None:
+                color = self.hidden_objs[name].color    
             self.dofs[name] = self.hidden_objs[name]
             del self.hidden_objs[name]
             self.update_obj(self.dofs[name],
@@ -403,6 +402,11 @@ class VMolecule(AtomicTrans):
                             radius=radius,
                             color=color)
             return self.dofs[name]
+        
+        if color is None:
+            # Add half color like in nglvew ball-sticks
+            color = vp.vector(0.5, 0.5, 0.5)
+        color = self._asvector(color)
 
         # In case it was not created previously:
         b = vp.cylinder(pos=bond_extreme,
