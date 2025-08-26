@@ -3,7 +3,7 @@ from ase.data.colors import jmol_colors
 from vmol.tools.transformer import AtomicTrans
 from vmol.tools.dofs import VisualAngle
 from vpython import vector
-import vmol.vpython_with_img as vp
+import vpython as vp
 import numpy as np
 from IPython.display import clear_output
 from ase.geometry.analysis import Analysis
@@ -167,6 +167,7 @@ class VMolecule(AtomicTrans):
                 self.caption.text = self.caption.text.replace(',', '\n')
                 self.caption.text = self.caption.text.replace('{', ' ')
                 self.caption.text = self.caption.text.replace('}', '')
+                self.caption.text = self.caption.text.replace("'", '')
             else:
                 self.selected = None
                 self.caption.text = ''
@@ -222,6 +223,72 @@ class VMolecule(AtomicTrans):
         n-images for an animation."""
         return self.scene.capture(name)
     # endregion
+
+        
+    def add_image_to_canvas(self, fig):
+        """
+        Add the a matplotlib figure to the canvas in a notebook (other
+        environments are not working properly yet).
+
+        Parameters
+        ==========
+        fig: plt.Figure
+            figure to be added to the canvas.
+
+        Return
+        ======
+        (io.BytesIO) buffer that contains the image.
+
+        Note
+        ----
+        This function assumes that the height of the figure is the same
+        as the height of the canvas. Always take into account the that the size
+        of the canvas is in pixels and the size of the matplotlib figure is in
+        inches.
+
+        Warning
+        -------
+        For some strange reason, this function does not work properly if a
+        vpython canvas hasn't been rendered before.
+        """
+        if self.vp._notebook_helpers._isnotebook:
+            import io
+            import base64
+            from IPython.display import display, HTML, Javascript
+
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png', dpi=fig.get_dpi())
+            buf.seek(0)
+
+            # Convert the PNG to a base64 string
+            img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+            buf.close()
+
+            # custom container with a "slot" for GlowScript + the image
+            display(HTML(f"""
+            <div id="glowscript" style="display: flex">
+                <div id="vpython_target" style="flex: 0;"></div>
+                <div>
+                    <img src="data:image/png;base64,{img_base64}" 
+                         style="height:{self.scene._height}px;"/>
+                </div>
+            </div>
+            """))
+
+            # tell GlowScript/VPython to render into the left slot
+            display(Javascript("""
+            if (typeof Jupyter !== "undefined") {
+                window.__context = { glowscript_container:
+                               $("#vpython_target").removeAttr("id") };
+            } else {
+                element.textContent = ' ';
+            }
+            """))
+
+            return buf
+        else:
+            raise EnvironmentError("add_image_to_canvas only works in a " + 
+                                   "Jupyter notebook environment.")
 
     # region 2_Atoms
     def add_atoms(self, atoms: Atoms = None,
