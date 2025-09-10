@@ -1,4 +1,4 @@
-import vmol.vpython_with_img as vp
+import vpython as vp
 
 
 class VisualAngle:
@@ -117,8 +117,9 @@ class VisualAngle:
 
         for i in range(self.n):
             theta = i * theta_total / (self.n - 1)
+
             self.vertexes[i].pos = self.origin.pos + \
-                vp.rotate(lend*a.hat, angle=theta, axis=axis)
+                vp.rotate(a.hat * lend, angle=theta, axis=axis)
         return self.vertexes
 
     def transport(self, v0: list) -> list:
