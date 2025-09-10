@@ -79,6 +79,7 @@ class VMolecule(AtomicTrans):
         self.color_scheme = color_scheme
         self.vatoms = []
         self.dofs = {}
+        
         # Unfortunately, vpython has problems removing objects
         # (check vpython.baseObj.delete,
         # then I just keep them invisible, in case to reload,
@@ -90,6 +91,8 @@ class VMolecule(AtomicTrans):
             self.add_def_bonds(self.atoms)
 
         self._hook = True
+        self.update_frame()
+        
 
     def __getattribute__(self, name):
         attr = super().__getattribute__(name)
@@ -631,7 +634,7 @@ class VMolecule(AtomicTrans):
                   atom2index: int,
                   atom3index: int,
                   color: list = None,
-                  n: int = 20,
+                  n: int = 5,
                   factor: float = 0.7) -> dict:
         """Add an angle to between three atoms with the vertex in the atom2.
 
@@ -645,10 +648,10 @@ class VMolecule(AtomicTrans):
             Index of the third atom that defines the angle. 1-based indexing.
         color: color list. Default all gray([0.5, 0.5, 0.5])
             RGB triplet.
-        n: int. Default 10
+        n: int. Default=5
             number of intermedia points to add in the arc of
             the angle.
-        factor:
+        factor: float. Default=0.7
             factor of the minimim bond lenght to define the size of the arc.
 
         Returns
@@ -759,7 +762,7 @@ class VMolecule(AtomicTrans):
                      atom2index: int, atom3index: int,
                      atom4index: int,
                      color: list = None,
-                     n: int = 20,
+                     n: int = 5,
                      factor: float = 0.7) -> VisualAngle:
         """Add a dihedral angle between four atoms with the vertex in the midle
         of the atom 2 and 3.
