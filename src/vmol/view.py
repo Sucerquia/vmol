@@ -483,6 +483,7 @@ class VMolecule(AtomicTrans):
                         canvas=self.scene)
 
         b.indices = np.array([atom1index, atom2index, 0, 0])
+        b.name = name
 
         self.dofs[name] = b
 
@@ -697,6 +698,8 @@ class VMolecule(AtomicTrans):
 
         self.dofs[name].indices = np.array([atom1index, atom2index,
                                             atom3index, 0])
+        self.dofs[name].name = name
+        
 
         return self.dofs[name]
 
@@ -831,6 +834,8 @@ class VMolecule(AtomicTrans):
                                       factor=factor)
         self.dofs[name].indices = np.array([atom1index, atom2index,
                                             atom3index, atom4index])
+        self.dofs[name].name = name
+
         return self.dofs[name]
 
     def hide_dihedral(self, atom1index: int, atom2index: int,
