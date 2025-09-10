@@ -470,12 +470,12 @@ class VMolecule(AtomicTrans):
                             color=color)
             return self.dofs[name]
         
+        # In case it was not created previously:
         if color is None:
             # Add half color like in nglvew ball-sticks
             color = vp.vector(0.5, 0.5, 0.5)
         color = self._asvector(color)
 
-        # In case it was not created previously:
         b = vp.cylinder(pos=bond_extreme,
                         axis=bond_axis,
                         color=color,
@@ -655,9 +655,6 @@ class VMolecule(AtomicTrans):
         =======
         (vmol.tools.dofs.VisualAngle) Just created angle.
         """
-        if color is None:
-            color = vp.vector(0.5, 0.5, 0.5)
-        color = self._asvector(color)
         # TODO: hide next block
         # if self.is_trajectory:
         #    atoms = self.atoms[self.viewer.view.frame]
@@ -673,6 +670,8 @@ class VMolecule(AtomicTrans):
 
         # If already exists.
         if name in self.dofs.keys():
+            if color is None:
+                color = self.dofs[name].color
             self.dofs[name].update_vertexes(origin=vertex,
                                             a=side1,
                                             b=side2,
@@ -681,6 +680,8 @@ class VMolecule(AtomicTrans):
         # If it was previously hidden. It means it is there but it is
         # invisible.
         elif name in self.hidden_objs.keys():
+            if color is None:
+                color = self.hidden_objs[name].color
             self.dofs[name] = self.hidden_objs[name]
             self.dofs[name].update_vertexes(origin=vertex,
                                             a=side1,
@@ -689,7 +690,10 @@ class VMolecule(AtomicTrans):
             self.dofs[name].show()
             del self.hidden_objs[name]
             return self.dofs[name]
-
+        
+        if color is None:
+            color = vp.vector(0.5, 0.5, 0.5)
+        color = self._asvector(color)
         # In case it was not created previously:
         self.dofs[name] = VisualAngle(side1, side2, n,
                                       origin=vertex, color=color,
@@ -782,10 +786,6 @@ class VMolecule(AtomicTrans):
         =======
         (vmol.tools.dofs.VisualAngle) Just created dihedral angle.
         """
-        if color is None:
-            color = vp.vector(0.5, 0.5, 0.5)
-        color = self._asvector(color)
-
         # TODO: delete next block
         # if self.is_trajectory:
         #    atoms = self.atoms[self.viewer.view.frame]
@@ -809,6 +809,8 @@ class VMolecule(AtomicTrans):
 
         # If already exists.
         if name in self.dofs.keys():
+            if color is None:
+                color = self.dofs[name].color
             self.dofs[name].update_vertexes(origin=vertex,
                                             a=side1,
                                             b=side2,
@@ -817,6 +819,8 @@ class VMolecule(AtomicTrans):
         # If it was previously hidden. It means it is still there but it is
         # invisible.
         elif name in self.hidden_objs.keys():
+            if color is None:
+                color = self.hidden_objs[name].color
             self.dofs[name] = self.hidden_objs[name]
             self.dofs[name].update_vertexes(origin=vertex,
                                             a=side1,
@@ -827,6 +831,10 @@ class VMolecule(AtomicTrans):
             return self.dofs[name]
 
         # In case it was not created previously:
+        if color is None:
+            color = vp.vector(0.5, 0.5, 0.5)
+        color = self._asvector(color)
+
         self.dofs[name] = VisualAngle(side1, side2, n,
                                       origin=vertex,
                                       color=color,

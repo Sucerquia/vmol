@@ -100,10 +100,11 @@ class VisualAngle:
         if origin is not None:
             self.origin.pos = self._asvector(origin)
         if color is not None:
-            color = self._asvector(color)
-            self.origin.color = color
-            for vertex in self.vertexes:
-                vertex.color = color
+            self.color = self._asvector(color)
+
+        self.origin.color = self.color
+        for vertex in self.vertexes:
+            vertex.color = self.color
 
         lena = a.mag
         lenb = b.mag
