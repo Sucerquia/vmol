@@ -1,7 +1,7 @@
 from ase import Atoms
 from ase.data.colors import jmol_colors
 from vmol.tools.transformer import AtomicTrans
-from vmol.tools.dofs import VisualAngle
+from vmol.tools.dofs import VisualAngle, Bond
 from vpython import vector
 import vpython as vp
 import numpy as np
@@ -20,7 +20,7 @@ class VMolecule(AtomicTrans):
                  show_axis: bool = False,
                  alignment: list = None,
                  frame=0,
-                 radius=0.2,
+                 radius=None,
                  default_bonds=False,
                  **kwargs) -> None:
         """
@@ -79,14 +79,14 @@ class VMolecule(AtomicTrans):
         self.color_scheme = color_scheme
         self.vatoms = []
         self.dofs = {}
-        
+
         # Unfortunately, vpython has problems removing objects
         # (check vpython.baseObj.delete,
         # then I just keep them invisible, in case to reload,
         # just change to visibles dofs
         self.hidden_objs = {}
         self.add_atoms(radius=radius)
-        
+
         if default_bonds:
             self.add_def_bonds(self.atoms)
 
@@ -119,6 +119,7 @@ class VMolecule(AtomicTrans):
         """
         if not isinstance(arraylike, vp.vector):
             arraylike = vp.vector(*arraylike)
+
         return arraylike
 
     def update_obj(self, obj, **kwargs):
@@ -144,7 +145,7 @@ class VMolecule(AtomicTrans):
             # objects has lists as parameters.
             if isinstance(val, (np.ndarray,
                                 list,
-                                tuple)):
+                                tuple)) and len(val) == 3:
                 val = vector(*val)
             setattr(obj, attr, val)
         return obj
@@ -152,7 +153,7 @@ class VMolecule(AtomicTrans):
     def setting_canvas(self, **kwargs) -> vp.canvas:
         """Setting vpython scene.
 
-        \*\*kwargs: vpython.canvas attibutes
+        kwargs: vpython.canvas attibutes
         """
         scene = self.update_obj(self.scene, **kwargs)
         return scene
@@ -296,7 +297,7 @@ class VMolecule(AtomicTrans):
     # region 2_Atoms
     def add_atoms(self, atoms: Atoms = None,
                   color_scheme: dict = jmol_colors,
-                  radius: float = 0.2) -> list:
+                  radius: float = None) -> list:
         """Add vpython spheres that are representations of atoms.
 
         Parameters
@@ -314,12 +315,20 @@ class VMolecule(AtomicTrans):
         """
         if atoms is None:
             atoms = self.atoms
+        
+        if radius is None:
+            radius = np.ones(len(atoms)) * 0.35
+            hydrogens = np.array(atoms.get_chemical_symbols()) == 'H'
+            radius[hydrogens] = 0.2
+
+        if isinstance(radius, (float, int)):
+            radius = [ radius ] * len(atoms)
 
         for i, atom in enumerate(atoms):
             sphere = vp.sphere(pos=vector(*atom.position),
                                color=vector(*color_scheme[atom.number]),
                                canvas=self.scene,
-                               radius=radius)
+                               radius=radius[i])
             sphere.index = i + 1
             sphere.info = {'Index': i + 1,
                            'Atom': atom.symbol,
@@ -359,11 +368,15 @@ class VMolecule(AtomicTrans):
 
         bonds1 = []
         bonds2 = []
+        colors = []
         for i, contact in enumerate(unique_contact):
             for j in contact:
                 bonds1.append(i + 1)
                 bonds2.append(j + 1)
-        self.add_bonds(bonds1, bonds2)
+                colors.append([self.vatoms[i].color,
+                               self.vatoms[j].color])
+
+        self.add_bonds(bonds1, bonds2, colors=colors)
 
     def hide_atom(self, atomindex: int) -> vp.sphere:
         """Hide one atom in the scene.
@@ -420,7 +433,7 @@ class VMolecule(AtomicTrans):
 
     # region 2_DOFs_1_bonds
     def add_bond(self, atom1index: int, atom2index: int,
-                 color: vector = None, radius: float = 0.1) -> vp.cylinder:
+                 color: vector = None, radius: float = None) -> vp.cylinder:
         """
         Add a bond between two atoms.
 
@@ -441,7 +454,7 @@ class VMolecule(AtomicTrans):
         """
         bond_extreme = self.vatoms[atom1index - 1].pos
         bond_axis = self.vatoms[atom2index - 1].pos - \
-            self.vatoms[atom1index - 1].pos
+                    self.vatoms[atom1index - 1].pos
 
         indexes = [atom1index, atom2index]
         if atom1index > atom2index:
@@ -452,6 +465,8 @@ class VMolecule(AtomicTrans):
         if name in self.dofs.keys():
             if color is None:
                 color = self.dofs[name].color
+            if radius is None:
+                radius = self.dofs[name].radius
             self.update_obj(self.dofs[name],
                             pos=bond_extreme,
                             axis=bond_axis,
@@ -460,6 +475,8 @@ class VMolecule(AtomicTrans):
             return self.dofs[name]
         # If it was previously hidden. It means it is there but it is
         # invisible.
+        if radius is None:
+            radius = 0.1
         elif name in self.hidden_objs.keys():
             if color is None:
                 color = self.hidden_objs[name].color    
@@ -472,18 +489,12 @@ class VMolecule(AtomicTrans):
                             radius=radius,
                             color=color)
             return self.dofs[name]
-        
-        # In case it was not created previously:
-        if color is None:
-            # Add half color like in nglvew ball-sticks
-            color = vp.vector(0.5, 0.5, 0.5)
-        color = self._asvector(color)
 
-        b = vp.cylinder(pos=bond_extreme,
-                        axis=bond_axis,
-                        color=color,
-                        radius=radius,
-                        canvas=self.scene)
+        b = Bond(pos=bond_extreme,
+                 axis=bond_axis,
+                 color=color,
+                 radius=radius,
+                 canvas=self.scene)
 
         b.indices = np.array([atom1index, atom2index, 0, 0])
         b.name = name
@@ -495,7 +506,7 @@ class VMolecule(AtomicTrans):
     def add_bonds(self, atoms1indexes: list,
                   atoms2indexes: list,
                   colors: list = None,
-                  radii: float = 0.07) -> dict:
+                  radii: float = None) -> dict:
         """
         Add a bond between each pair of atoms corresponding to the ordered
         elements two lists of atoms.

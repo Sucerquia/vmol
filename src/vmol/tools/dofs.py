@@ -1,4 +1,5 @@
 import vpython as vp
+import numpy as np
 
 
 class VisualAngle:
@@ -164,3 +165,62 @@ class VisualAngle:
         for tri in self.triangles:
             tri.visible = True
         return self
+
+
+class Bond:
+    def __init__(self, pos: vp.vector = vp.vector(0, 0, 0),
+                 axis: vp.vector = vp.vector(1, 0, 0),
+
+                 radius: float = 0.1, color: vp.vector = None, **kwargs):
+        super().__setattr__('composed', 1)  # formed by 1 or 2 colors/cylinders
+        if color is None:
+            color = vp.vector(0.5, 0.5, 0.5)
+        if isinstance(color, vp.vector):
+            color = [color, color]
+        if isinstance(color, (list, tuple, np.ndarray)) and len(color) != 2:
+            color = vp.vector(*color)
+            color = [color, color]
+
+        cylinder1 = vp.cylinder(pos=pos,
+                                     axis=axis/2,
+                                     radius=radius,
+                                     color=color[0],
+                                     **kwargs)
+
+        cylinder2 = vp.cylinder(pos=pos + axis/2,
+                                     axis=axis/2,
+                                     radius=radius,
+                                     color=color[1],
+                                     **kwargs)
+        
+        super().__setattr__('cylinder1', cylinder1)
+        super().__setattr__('cylinder2', cylinder2)
+
+
+    def __setattr__(self, name, value):
+        if name == 'color':
+            if isinstance(value, vp.vector):
+                color = [value, value]
+            else:
+                color = value
+            self.cylinder1.__setattr__('color', color[0])
+            self.cylinder2.__setattr__('color', color[1])
+        elif name == 'pos':
+            self.cylinder1.__setattr__('pos', value)
+            self.cylinder2.__setattr__('pos', value + self.cylinder1.axis)
+        elif name == 'axis':
+            self.cylinder1.__setattr__('axis', value/2)
+            self.cylinder2.__setattr__('pos',
+                                    self.cylinder1.pos + value/2)
+            self.cylinder2.__setattr__('axis', value/2)
+        else:
+            self.cylinder1.__setattr__(name, value)
+            self.cylinder2.__setattr__(name, value)
+
+    def __getattr__(self, name):
+        if name == 'color':
+            return [self.cylinder1.color, self.cylinder2.color]
+        if name == 'axis':
+            return self.cylinder1.axis + self.cylinder2.axis
+        else:
+            return getattr(self.cylinder1, name)
